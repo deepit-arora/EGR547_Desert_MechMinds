@@ -1,0 +1,31 @@
+function var_update(exportedData)
+
+
+variableNames = {'thetas', 'alphas', 'as', 'ds', 'link_masses', 'motor_mass', 'I_motors', 'I_links'};
+for k = 1:length(variableNames)
+    numericData = str2double(exportedData{:, k}); % Convert string to double
+    cleanData = numericData(~isnan(numericData)); % Remove NaN values
+    assignin('base', variableNames{k}, cleanData'); % Assign clean data to base workspace
+end
+thetas = evalin('base', 'thetas');
+alphas = evalin('base', 'alphas');
+as = evalin('base', 'as');
+ds = evalin('base', 'ds');
+
+% forward 
+thetas = evalin('base', 'thetas');
+alphas = evalin('base', 'alphas');
+as = evalin('base', 'as');
+ds = evalin('base', 'ds');
+link_masses =evalin('base', 'lin');
+motor_mass = evalin('base', 'ds');
+I_motors = evalin('base', 'ds');
+I_links = evalin('base', 'ds');
+[T0H, T0H_sym] = f_kinematics(thetas, alphas, as, ds);
+assignin('base', "T0H_sym", T0H_sym )
+
+
+
+end
+
+
