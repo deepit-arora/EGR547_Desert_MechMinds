@@ -31,11 +31,7 @@ function [T0H, T0H_sym] = f_kinematics(thetas, alphas, a, d)
 
     % getting symbolic joint variables from input list
     for i = 1:number_joints
-        if thetas(i) ~= 0
-            q_list{i} = sym(sprintf('q%d', i));
-        else
-            q_list{i} = 0;
-        end
+        q_list{i} = sym(sprintf('q%d', i));
         if alphas(i) ~= 0
             alpha_list{i} = sym(sprintf('alpha%d', i));
         else

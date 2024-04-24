@@ -1,5 +1,5 @@
 %% Derive Intertia Matrix based on DH inputs
-function B_sum = inertia_matrix(thetas, alphas, a, d, jointTypes)
+function [B_sum, Jp_l, Jo_l, Jp_m, Jo_m] = inertia_matrix(thetas, alphas, a, d, jointTypes)
     % This function calculates the intertia matrix for a given set
     % of dh parameters, motor masses, and link masses, and returns it
     % as a 3xn (number of joints) matrix.
@@ -57,12 +57,12 @@ function B_sum = inertia_matrix(thetas, alphas, a, d, jointTypes)
         % origin frame T0H(0) = T0H{1}
         elseif jointTypes(i) == 'R' || jointTypes(i) == 'r'
             for j=1:number_joints
-                if j == 1
+                if j == 1                                 
                     Jp_l{i}(:, j) = cross(T0H_sym{j}(1:3, 3), T0H_sym{i}(1:3, 4));
                     Jo_l{i}(:, j) = T0H_sym{j}(1:3, 3);
-                elseif (j ~= 1) && (j <= i)
-                    Jp_l{i}(:, j) = cross(T0H_sym{j}(1:3, 3), T0H_sym{i}(1:3, 4)-T0H_sym{j-1}(1:3, 4));
-                    Jo_l{i}(:, j) = T0H_sym{j}(1:3, 3);
+                elseif (j ~= 1) && (j <= i)   % both edited from j to j-1
+                    Jp_l{i}(:, j) = cross(T0H_sym{j-1}(1:3, 3), T0H_sym{i}(1:3, 4)-T0H_sym{j-1}(1:3, 4));
+                    Jo_l{i}(:, j) = T0H_sym{j-1}(1:3, 3);
                 end
             end
         end
@@ -91,8 +91,8 @@ function B_sum = inertia_matrix(thetas, alphas, a, d, jointTypes)
                 if j > i-1
                     continue
                 else
-                    if j == 1
-                        Jp_m{i}(:, j) = cross(T0H_sym{j}(1:3, 3), T0H_sym{i}(1:3, 3));
+                    if j == 1 
+                        Jp_m{i}(:, j) = cross(T0H_sym{j}(1:3, 3), T0H_sym{i}(1:3, 4));
                     else
                         Jp_m{i}(:, j) = cross(T0H_sym{j-1}(1:3, 3), T0H_sym{i}(1:3, 4) - T0H_sym{j-1}(1:3, 4));
                 
@@ -129,7 +129,7 @@ function B_sum = inertia_matrix(thetas, alphas, a, d, jointTypes)
     end
 
     B_sum = zeros(size(B{1}, 1), size(B{1}, 2));
-    for i=1:3
+    for i=1:number_joints
         B_sum = simplify(B_sum + B{i});
     end
     
