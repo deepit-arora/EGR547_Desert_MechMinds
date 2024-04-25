@@ -5,10 +5,10 @@ function [B_sum, Jp_l, Jo_l, Jp_m, Jo_m] = inertia_matrix(thetas, alphas, a, d, 
     % as a 3xn (number of joints) matrix.
 
     % USAGE:
-    %        input thetas as radians, i.e thetas = [pi/4 0 0]
-    %        input alphas as radians, i.e alphas = [0 pi/2 pi/4]
-    %        input a as numbers, i.e a = [1 0 0]
-    %        input d as numbers, i.e d = [0 1.5 2.5]
+    %        input thetas as radians or variables as cell matrix, i.e thetas = {'theta1' 0 0}
+    %        input alphas as radians as cell matrix, i.e alphas = {0 pi/2 pi/4}
+    %        input a as numbers as cell matrix, i.e a = {a1 0 0}
+    %        input d as numbers or variables as cell matrix, i.e d = {0 d2 d3}
     %        input jointTypes as letters, i.e jointTypes = ['R', 'P', 'P']
     %    to return intertia matrix B, do:
     %    B = inertia_matrix(thetas, alphas, a, d, jointTypes)
@@ -22,7 +22,7 @@ function [B_sum, Jp_l, Jo_l, Jp_m, Jo_m] = inertia_matrix(thetas, alphas, a, d, 
     end
     
     % using forward kinematics function to get T0H and T0H syms matricies
-    [T0H, T0H_sym] = f_kinematics(thetas, alphas, a, d);
+    [T0H, T0H_sym, ~] = f_kinematics(thetas, alphas, a, d);
 
     % Setting motor and link symbolic masses
     for i = 1:number_joints
@@ -52,7 +52,7 @@ function [B_sum, Jp_l, Jo_l, Jp_m, Jo_m] = inertia_matrix(thetas, alphas, a, d, 
                     Jp_l{i}(:, j) = T0H_sym{j}(1:3, 3);
                 end
             end
-
+        
         % revolute joints
         % origin frame T0H(0) = T0H{1}
         elseif jointTypes(i) == 'R' || jointTypes(i) == 'r'
@@ -71,7 +71,7 @@ function [B_sum, Jp_l, Jo_l, Jp_m, Jo_m] = inertia_matrix(thetas, alphas, a, d, 
     % Jacobians for Motors:
     Jp_m = {};
     Jo_m = {};
- 
+
     for i=1:number_joints
         Jp_m{i} = sym(zeros(3, number_joints));
         

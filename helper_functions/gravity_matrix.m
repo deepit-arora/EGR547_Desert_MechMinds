@@ -4,10 +4,11 @@ function gravity_terms = gravity_matrix(thetas, alphas, a, d, jointTypes, g0)
     % representing the initial gravity terms, and returns the g(q) matrix.
 
     % USAGE: 
-    %        input thetas as radians, i.e thetas = [pi/4 0 0]
-    %        input alphas as radians, i.e alphas = [0 pi/2 pi/4]
-    %        input a as numbers, i.e a = [1 0 0]
-    %        input d as numbers, i.e d = [0 1.5 2.5]
+    %        input thetas as radians or variables as cell matrix, i.e thetas = {'theta1' 0 0}
+    %        input alphas as radians as cell matrix, i.e alphas = {0 pi/2 pi/4}
+    %        input a as numbers as cell matrix, i.e a = {a1 0 0}
+    %        input d as numbers or variables as cell matrix, i.e d = {0 d2 d3}
+    %        input jointTypes as letters, i.e jointTypes = ['R', 'P', 'P']
     %        input g0 as an initial gravity matrix, i.e g = [0 -9.81 0]
     %     to return the reduced gravity_terms matrix, do:
     %     gravity_terms = gravity_matrix(thetas, alphas, a, d, jointTypes, g0)
@@ -48,9 +49,9 @@ function gravity_terms = gravity_matrix(thetas, alphas, a, d, jointTypes, g0)
     for i=1:number_joints
         for j=1:number_joints
             if j == 1
-                g{j} = ((ml_list{j}.*g_list*Jp_l{j}(:, i)) + (mm_list{j}.*g_list*Jp_m{j}(:, i)));
+                g{j} = ((ml_list{j}.*g_list'*Jp_l{j}(:, i)) + (mm_list{j}.*g_list'*Jp_m{j}(:, i)));
             else
-                g_sum = ((ml_list{j}.*g_list*Jp_l{j}(:, i)) + (mm_list{j}.*g_list*Jp_m{j}(:, i)));
+                g_sum = ((ml_list{j}.*g_list'*Jp_l{j}(:, i)) + (mm_list{j}.*g_list'*Jp_m{j}(:, i)));
                 g{j} = g{j-1} + g_sum;
             end
         end
