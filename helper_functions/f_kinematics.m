@@ -73,6 +73,7 @@ function [T0H, T0H_sym, joint_variables] = f_kinematics(thetas, alphas, a, d)
         T0H{i} = subs(T0H_sym{i}, [q_list, alpha_list, a_sym, d_sym], [thetas, alphas, a, d]);
         T0H{i} = simplify(T0H{i});
     end
+    joint_variables = joint_variables';
 end
 
 function mixedArray = createMixedArray(inputArray)

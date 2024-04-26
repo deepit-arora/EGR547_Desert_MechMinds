@@ -11,7 +11,6 @@ function n = n_matrix(thetas, alphas, a, d, jointTypes, g0, friction_coeff)
 
     % getting joint variables
     [~, ~, joint_variables] = f_kinematics(thetas, alphas, a, d);
-    joint_variables = joint_variables';
     
     % getting q dot
     for i = 1:length(joint_variables)
