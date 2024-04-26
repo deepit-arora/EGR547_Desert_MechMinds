@@ -8,7 +8,7 @@ function [B_sum, Jp_l, Jo_l, Jp_m, Jo_m] = inertia_matrix(thetas, alphas, a, d, 
     %        input thetas as radians or variables as cell matrix, i.e thetas = {'theta1' 0 0}
     %        input alphas as radians as cell matrix, i.e alphas = {0 pi/2 pi/4}
     %        input a as numbers as cell matrix, i.e a = {a1 0 0}
-    %        input d as numbers or variables as cell matrix, i.e d = {0 d2 d3}
+    %        input d as numbers or variables as cell matrix, i.e d = {0 'd2' 'd3'}
     %        input jointTypes as letters, i.e jointTypes = ['R', 'P', 'P']
     %    to return intertia matrix B, do:
     %    B = inertia_matrix(thetas, alphas, a, d, jointTypes)
@@ -38,7 +38,6 @@ function [B_sum, Jp_l, Jo_l, Jp_m, Jo_m] = inertia_matrix(thetas, alphas, a, d, 
 
     % Computation of Kinetic Energy:
     % Jacobians for Links:
-    syms alpha1 alpha2 d1 d2
     Jp_l = {};
     Jo_l = {};
     for i=1:number_joints

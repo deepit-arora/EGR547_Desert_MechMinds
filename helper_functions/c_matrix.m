@@ -3,11 +3,11 @@ function c = c_matrix(thetas, alphas, a, d, jointTypes)
     % This function accepts DH parameters and jointTypes,
     % and returns the c matrix.
 
-    % USAGE: 
-    %        input thetas as radians, i.e thetas = [pi/4 0 0]
-    %        input alphas as radians, i.e alphas = [0 pi/2 pi/4]
-    %        input a as numbers, i.e a = [1 0 0]
-    %        input d as numbers, i.e d = [0 1.5 2.5]
+    % USAGE:
+    %        input thetas as radians or variables as cell matrix, i.e thetas = {'theta1' 0 0}
+    %        input alphas as radians as cell matrix, i.e alphas = {0 -pi/2 0}
+    %        input a as numbers as cell matrix, i.e a = {0 0 0}
+    %        input d as numbers or variables as cell matrix, i.e d = {0 'd2' 'd3'}
     %        input jointTypes as letters, i.e jointTypes = ['R', 'P', 'P']
     %     to return the reduced c matrix, do:
     %     c = c_matrix(thetas, alphas, a, d, jointTypes)

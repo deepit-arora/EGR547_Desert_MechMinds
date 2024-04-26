@@ -7,7 +7,7 @@ function J_a = analytical_Ja(thetas, alphas, a, d)
     %        input thetas as radians or variables as cell matrix, i.e thetas = {'theta1' 0 0}
     %        input alphas as radians as cell matrix, i.e alphas = {0 pi/2 pi/4}
     %        input a as numbers as cell matrix, i.e a = {a1 0 0}
-    %        input d as numbers or variables as cell matrix, i.e d = {0 d2 d3}
+    %        input d as numbers or variables as cell matrix, i.e d = {0 'd2' 'd3'}
     %     to return the reduced analytical Jacobian matrix J_a
     
     number_joints = length(thetas);

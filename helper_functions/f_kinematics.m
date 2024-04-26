@@ -9,7 +9,7 @@ function [T0H, T0H_sym, joint_variables] = f_kinematics(thetas, alphas, a, d)
     %        input thetas as radians or variables as cell matrix, i.e thetas = {'theta1' 0 0}
     %        input alphas as radians as cell matrix, i.e alphas = {0 pi/2 pi/4}
     %        input a as numbers as cell matrix, i.e a = {a1 0 0}
-    %        input d as numbers or variables as cell matrix, i.e d = {0 d2 d3}
+    %        input d as numbers or variables as cell matrix, i.e d = {0 'd2' 'd3'}
     %     to return the reduced T0H matrix, the symbolic T0H matrix, and joint variables do:
     %     [T0H, T0H_sym, joint_variables] = f_kinematics(thetas, alphas, a, d)
 
