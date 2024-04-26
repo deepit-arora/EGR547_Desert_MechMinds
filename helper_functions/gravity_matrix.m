@@ -4,13 +4,15 @@ function gravity_terms = gravity_matrix(thetas, alphas, a, d, jointTypes, g0)
     % representing the initial gravity terms, and returns the g(q) matrix.
 
     % USAGE: 
-    %        input thetas as radians or variables as cell matrix, i.e thetas = {'theta1' 0 0}
+    %        input thetas as radians or variables as a cell matrix: FOR JOINT VARIABLES, 
+    %           INPUT A '_' NEXT TO THE VARIABLE: i.e thetas = {'_theta1' 0 0}, or  
     %        input alphas as radians as cell matrix, i.e alphas = {0 pi/2 pi/4}
     %        input a as numbers as cell matrix, i.e a = {a1 0 0}
-    %        input d as numbers or variables as cell matrix, i.e d = {0 'd2' 'd3'}
-    %        input jointTypes as letters, i.e jointTypes = ['R', 'P', 'P']
-    %        input g0 as an initial gravity matrix, i.e g = [0 -9.81 0]
-    %     to return the reduced gravity_terms matrix, do:
+    %        input d as numbers or variables as cell matrix: FOR JOINT VARIABLES, 
+    %           INPUT A '_' NEXT TO THE VARIABLE: i.e d = {0 'd2' '_d3'}
+    %        input jointTypes as a list of joint types, i.e jointTypes = ['R', 'P', 'P']
+    %        input g0 as the initial gravity matrix, i.e g0 = [0 0 -9.81]
+    % TO RUN THE CODE, DO:
     %     gravity_terms = gravity_matrix(thetas, alphas, a, d, jointTypes, g0)
 
     % getting number of gravity terms

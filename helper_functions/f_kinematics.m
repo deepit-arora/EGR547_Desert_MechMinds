@@ -6,10 +6,12 @@ function [T0H, T0H_sym, joint_variables] = f_kinematics(thetas, alphas, a, d)
     % tuple.
     
     % USAGE: 
-    %        input thetas as radians or variables as cell matrix, i.e thetas = {'theta1' 0 0}
+    %        input thetas as radians or variables as a cell matrix: FOR JOINT VARIABLES, 
+    %           INPUT A '_' NEXT TO THE VARIABLE: i.e thetas = {'_theta1' 0 0}, or  
     %        input alphas as radians as cell matrix, i.e alphas = {0 pi/2 pi/4}
     %        input a as numbers as cell matrix, i.e a = {a1 0 0}
-    %        input d as numbers or variables as cell matrix, i.e d = {0 'd2' 'd3'}
+    %        input d as numbers or variables as cell matrix: FOR JOINT VARIABLES, 
+    %           INPUT A '_' NEXT TO THE VARIABLE: i.e d = {0 'd2' '_d3'}
     %     to return the reduced T0H matrix, the symbolic T0H matrix, and joint variables do:
     %     [T0H, T0H_sym, joint_variables] = f_kinematics(thetas, alphas, a, d)
 
@@ -43,13 +45,31 @@ function [T0H, T0H_sym, joint_variables] = f_kinematics(thetas, alphas, a, d)
     % getting joint variables
     joint_variables = {};
     for i=1:number_joints
-        if isa(q_list{i}, 'sym')
+        if isa(q_list{i}, 'sym') && contains(char(q_list{i}), '_')
             joint_variables(i) = q_list(i);
-        elseif isa(d_sym{i}, 'sym')
+        elseif isa(d_sym{i}, 'sym') && contains(char(d_sym{i}), '_')
             joint_variables(i) = d_sym(i);
         end
     end
 
+    % stripping the '_' from jointvariables
+    for i = 1:length(joint_variables)
+        var_str = string(joint_variables{i});
+        var_str = strrep(var_str, '_', '');
+        joint_variables{i} = sym(var_str);
+    end
+    
+    % stripping the '_' from the input lists
+    for i = 1:number_joints
+        var_str_theta = string(thetas{i});
+        var_str_theta = strrep(var_str_theta, '_', '');
+        q_list{i} = sym(var_str_theta);
+        var_str_d = string(d{i});
+        var_str_d = strrep(var_str_d, '_', '');
+        d_sym{i} = sym(var_str_d);
+    end
+
+    % initializing T0H
     for i=1:number_joints
         T0H_sym{i} = zeros(4);
     end
@@ -70,7 +90,7 @@ function [T0H, T0H_sym, joint_variables] = f_kinematics(thetas, alphas, a, d)
     end
 
     for i = 1:number_joints
-        T0H{i} = subs(T0H_sym{i}, [q_list, alpha_list, a_sym, d_sym], [thetas, alphas, a, d]);
+        T0H{i} = subs(T0H_sym{i}, [q_list, alpha_list, a_sym, d_sym], [q_list, alphas, a, d_sym]);
         T0H{i} = simplify(T0H{i});
     end
     joint_variables = joint_variables';

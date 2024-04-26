@@ -5,12 +5,14 @@ function [B_sum, Jp_l, Jo_l, Jp_m, Jo_m] = inertia_matrix(thetas, alphas, a, d, 
     % as a 3xn (number of joints) matrix.
 
     % USAGE:
-    %        input thetas as radians or variables as cell matrix, i.e thetas = {'theta1' 0 0}
+    %        input thetas as radians or variables as a cell matrix: FOR JOINT VARIABLES, 
+    %           INPUT A '_' NEXT TO THE VARIABLE: i.e thetas = {'_theta1' 0 0}, or  
     %        input alphas as radians as cell matrix, i.e alphas = {0 pi/2 pi/4}
     %        input a as numbers as cell matrix, i.e a = {a1 0 0}
-    %        input d as numbers or variables as cell matrix, i.e d = {0 'd2' 'd3'}
-    %        input jointTypes as letters, i.e jointTypes = ['R', 'P', 'P']
-    %    to return intertia matrix B, do:
+    %        input d as numbers or variables as cell matrix: FOR JOINT VARIABLES, 
+    %           INPUT A '_' NEXT TO THE VARIABLE: i.e d = {0 'd2' '_d3'}
+    %        input jointTypes as a list of joint types, i.e jointTypes = ['R', 'P', 'P']
+    %    TO RUN THE CODE, DO:
     %    B = inertia_matrix(thetas, alphas, a, d, jointTypes)
     %    B will be the 3xn intertia matrix corresponding to the DH params
 
@@ -22,7 +24,7 @@ function [B_sum, Jp_l, Jo_l, Jp_m, Jo_m] = inertia_matrix(thetas, alphas, a, d, 
     end
     
     % using forward kinematics function to get T0H and T0H syms matricies
-    [T0H, T0H_sym, ~] = f_kinematics(thetas, alphas, a, d);
+    [T0H, ~, ~] = f_kinematics(thetas, alphas, a, d);
 
     % Setting motor and link symbolic masses
     for i = 1:number_joints
@@ -48,7 +50,7 @@ function [B_sum, Jp_l, Jo_l, Jp_m, Jo_m] = inertia_matrix(thetas, alphas, a, d, 
         if jointTypes(i) == 'P' || jointTypes(i) == 'p'
             for j=1:number_joints
                 if j <= i 
-                    Jp_l{i}(:, j) = T0H_sym{j}(1:3, 3);
+                    Jp_l{i}(:, j) = T0H{j}(1:3, 3);
                 end
             end
         
@@ -57,11 +59,11 @@ function [B_sum, Jp_l, Jo_l, Jp_m, Jo_m] = inertia_matrix(thetas, alphas, a, d, 
         elseif jointTypes(i) == 'R' || jointTypes(i) == 'r'
             for j=1:number_joints
                 if j == 1                                 
-                    Jp_l{i}(:, j) = cross(T0H_sym{j}(1:3, 3), T0H_sym{i}(1:3, 4));
-                    Jo_l{i}(:, j) = T0H_sym{j}(1:3, 3);
+                    Jp_l{i}(:, j) = cross(T0H{j}(1:3, 3), T0H{i}(1:3, 4));
+                    Jo_l{i}(:, j) = T0H{j}(1:3, 3);
                 elseif (j ~= 1) && (j <= i)   % both edited from j to j-1
-                    Jp_l{i}(:, j) = cross(T0H_sym{j-1}(1:3, 3), T0H_sym{i}(1:3, 4)-T0H_sym{j-1}(1:3, 4));
-                    Jo_l{i}(:, j) = T0H_sym{j-1}(1:3, 3);
+                    Jp_l{i}(:, j) = cross(T0H{j-1}(1:3, 3), T0H{i}(1:3, 4)-T0H{j-1}(1:3, 4));
+                    Jo_l{i}(:, j) = T0H{j-1}(1:3, 3);
                 end
             end
         end
@@ -80,7 +82,7 @@ function [B_sum, Jp_l, Jo_l, Jp_m, Jo_m] = inertia_matrix(thetas, alphas, a, d, 
                 if j > i-1
                     continue
                 else
-                    Jp_m{i}(:, j) = T0H_sym{j}(1:3, 3);
+                    Jp_m{i}(:, j) = T0H{j}(1:3, 3);
                 end
             end
         
@@ -91,9 +93,9 @@ function [B_sum, Jp_l, Jo_l, Jp_m, Jo_m] = inertia_matrix(thetas, alphas, a, d, 
                     continue
                 else
                     if j == 1 
-                        Jp_m{i}(:, j) = cross(T0H_sym{j}(1:3, 3), T0H_sym{i}(1:3, 4));
+                        Jp_m{i}(:, j) = cross(T0H{j}(1:3, 3), T0H{i}(1:3, 4));
                     else
-                        Jp_m{i}(:, j) = cross(T0H_sym{j-1}(1:3, 3), T0H_sym{i}(1:3, 4) - T0H_sym{j-1}(1:3, 4));
+                        Jp_m{i}(:, j) = cross(T0H{j-1}(1:3, 3), T0H{i}(1:3, 4) - T0H{j-1}(1:3, 4));
                 
                     end
                 end
@@ -115,11 +117,11 @@ function [B_sum, Jp_l, Jo_l, Jp_m, Jo_m] = inertia_matrix(thetas, alphas, a, d, 
 
     % Finding the B(q) matrix from the sum equation:
     for i=1:number_joints
-        R_i_l = T0H_sym{i}(1:3, 1:3);
+        R_i_l = T0H{i}(1:3, 1:3);
         if i==1
             R_i_m = [[1 0 0]' [0 1 0]' [0 0 1]'];
         else
-            R_i_m = T0H_sym{i-1}(1:3, 1:3);
+            R_i_m = T0H{i-1}(1:3, 1:3);
         end
         B{i} = ml_list{i}*transpose(Jp_l{i})*Jp_l{i} + ...
                  transpose(Jo_l{i})*R_i_l*Il_list{i}*transpose(R_i_l)*Jo_l{i} + ...
@@ -133,4 +135,3 @@ function [B_sum, Jp_l, Jo_l, Jp_m, Jo_m] = inertia_matrix(thetas, alphas, a, d, 
     end
     
 end
-
