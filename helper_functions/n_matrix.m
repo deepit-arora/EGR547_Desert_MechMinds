@@ -24,9 +24,8 @@ function n = n_matrix(thetas, alphas, a, d, jointTypes, g0, friction_coeff)
 
     % getting gravity terms
     gravity_terms = gravity_matrix(thetas, alphas, a, d, jointTypes, g0);
-    gravity_terms = gravity_terms';
 
     % n(q, qdot) = C*q_dot*F*q_dot (Friction coef) + g (gravity terms)
     n = sym(c)*sym(joint_variables_dot) + sym(friction_coeff)*sym(joint_variables_dot) + sym(gravity_terms);
-
+    n = simplify(n);
 end

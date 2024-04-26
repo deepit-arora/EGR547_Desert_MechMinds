@@ -57,4 +57,5 @@ function gravity_terms = gravity_matrix(thetas, alphas, a, d, jointTypes, g0)
         end
         gravity_terms{i} = simplify(-g{j});
     end
+    gravity_terms = gravity_terms';
 end
