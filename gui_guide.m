@@ -22,7 +22,7 @@ function varargout = gui_guide(varargin)
 
 % Edit the above text to modify the response to help gui_guide
 
-% Last Modified by GUIDE v2.5 18-Apr-2024 12:17:41
+% Last Modified by GUIDE v2.5 27-Apr-2024 17:33:56
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -91,17 +91,25 @@ function dataTable_CreateFcn(hObject, eventdata, handles)
 % --- Executes on button press in exportButton.
 % Callback function for the button to export table data
 function exportButton_Callback(hObject, eventdata, handles)
-%exportedData =table('VariableNames',{'thetas','alphas','as ','ds ','link_masses','motor_mass','I_motors','I_links'});
+
+
 % Fetch the data from the table
 dataTable = findobj('Tag', 'dataTable'); % find table by Tag
 tableData = get(dataTable, 'Data'); % get data from table
-exportedData = array2table(tableData, 'VariableNames', {'thetas', 'alphas', 'as', 'ds', 'link_masses', 'motor_mass', 'I_motors', 'I_links'});
+exportedData = array2table(tableData, 'VariableNames',{'thetas', 'alphas', 'as', 'ds', 'joint_types', 'link_masses', 'motor_mass', 'I_motors', 'I_links', 'trans_ratios','friction_coeffs'});
 assignin('base', 'exportedData', tableData);
+
+% Fetch the data from the controls table
+controlsDataTable = findobj('Tag', 'controlsData'); % find table by Tag
+controlsTableData = get(controlsDataTable, 'Data'); % get data from table
+controlsexportedData = array2table(controlsTableData, 'VariableNames',{'intial_xyz', 'intial_phi_theta_rho', 'desired_xyz', 'des_phi_theta_rho', 'num_theta', 'num_aplhpa', 'num_a', 'num_d', 'gravity_mat', 'des_time','maxEF_accel'});
+assignin('base', 'controlsexportedData', controlsexportedData);
+
 % Optionally, display a message to the user
 disp('Data has been exported to the base workspace under the variable name "exportedData".');
 
 % VARS 
-var_update(exportedData);
+var_update(exportedData,controlsexportedData);
 
 
 %random eqn
@@ -246,3 +254,21 @@ plot(axesHandle8, rand(10,1), rand(10,1)); % Plot something
 xlabel(axesHandle8,"x axis")
 ylabel(axesHandle8,"y axis")
 title(axesHandle8," plot title")
+
+   
+
+
+% --- If Enable == 'on', executes on mouse press in 5 pixel border.
+% --- Otherwise, executes on mouse press in 5 pixel border or over compliance_control.
+function compliance_control_ButtonDownFcn(hObject, eventdata, handles)
+% hObject    handle to compliance_control (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- If Enable == 'on', executes on mouse press in 5 pixel border.
+% --- Otherwise, executes on mouse press in 5 pixel border or over impedence_control.
+function impedence_control_ButtonDownFcn(hObject, eventdata, handles)
+% hObject    handle to impedence_control (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
