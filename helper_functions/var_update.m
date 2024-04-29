@@ -30,9 +30,11 @@ for k = 1:length(variableNames)
 end
 
 % CONTROL TABLE
-contVariableNames = {'intial_xyz', 'intial_phi_theta_rho', 'desired_xyz', 'des_phi_theta_rho', 'num_theta', 'num_aplhpa', 'num_a', 'num_d', 'gravity_mat', 'des_time','maxEF_accel'};
+% Corrected set to cell array for indexing and fixed typo in variable names
+contVariableNames = {'initial_xyz', 'initial_phi_theta_rho', 'desired_xyz', 'des_phi_theta_rho', 'num_theta', 'num_alpha', 'num_a', 'num_d', 'gravity_mat', 'des_time', 'maxEF_accel'};
+% Assuming controlsexportedData is a cell array where each cell contains data for the corresponding variable name
 for k = 1:length(contVariableNames)
-    controlscurrentData = controlsexportedData{:, k};
+    controlscurrentData = controlsexportedData{1, k};
     if isnumeric(controlscurrentData)
         % Remove NaNs and ensure it is a column vector if it is numeric
         controlscurrentData = controlscurrentData(~isnan(controlscurrentData));
@@ -53,12 +55,33 @@ for k = 1:length(contVariableNames)
     controlscurrentData = str2double(controlscurrentData);
     assignin('base', contVariableNames{k}, controlscurrentData');
 end
+% 
+% for k = 1:length(contVariableNames)
+%     controlscurrentData = controlsexportedData{1, k}; % Only take data from the first row
+%     if isnumeric(controlscurrentData)
+%         % Handle numeric data directly, ensure it is a column vector
+%         controlscurrentData = controlscurrentData(:);
+%     else
+%         % Check if data is non-empty and ensure it is in column format
+%         if ~isempty(controlscurrentData) && iscell(controlscurrentData)
+%             controlscurrentData = controlscurrentData(:);
+%         end
+%         if ischar(controlscurrentData) || isstring(controlscurrentData)
+%             % Convert string to double if possible
+%             controlscurrentData = str2double(controlscurrentData);
+%         end
+%     end
+%     % Handle cases where the entire data point is empty or non-applicable
+%     if isempty(controlscurrentData)
+%         controlscurrentData = NaN;
+%     end
+%     % Assign cleaned data back to the base workspace with the corrected variable name
+%     controlscurrentData = str2double(controlscurrentData);
+%     assignin('base', contVariableNames{k}, controlscurrentData);
+% end
 
 
 joint_types = evalin('base', 'joint_types');
-
-
-
 
 
 if exist('joint_types', 'var') == 1  
@@ -105,9 +128,9 @@ assignin('base', 'friction_coeffs', friction_coeffs);
 
 
 % eqns
-equations = equations_of_motion(thetas, alphas, as, ds, joint_types_list, gravity_mat, ...
-    I_links, I_motors, link_masses, motor_mass, trans_ratios, friction_coeffs);
-assignin('base', 'equations', equations);
+% equatigions = equations_of_motion(thetas, alphas, as, ds, joint_types_list, gravity_mat, ...
+%     I_links, I_motors, link_masses, motor_mass, trans_ratios, friction_coeffs);
+% assignin('base', 'equations', equations);
 
 % plotting equation
 % plot_equations = return_plots_equations(equations);
