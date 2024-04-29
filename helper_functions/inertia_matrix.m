@@ -1,5 +1,6 @@
 %% Derive Intertia Matrix based on DH inputs
-function [B_sum, Jp_l, Jo_l, Jp_m, Jo_m] = inertia_matrix(thetas, alphas, a, d, jointTypes)
+function [B_sum, Jp_l, Jo_l, Jp_m, Jo_m, Il_list, Im_list, ml_list, mm_list, kr_list] = inertia_matrix(thetas, alphas, a, d, jointTypes)
+    global B_sum
     % This function calculates the intertia matrix for a given set
     % of dh parameters, motor masses, and link masses, and returns it
     % as a 3xn (number of joints) matrix.
@@ -8,7 +9,7 @@ function [B_sum, Jp_l, Jo_l, Jp_m, Jo_m] = inertia_matrix(thetas, alphas, a, d, 
     %        input thetas as radians or variables as a cell matrix: FOR JOINT VARIABLES, 
     %           INPUT A '_' NEXT TO THE VARIABLE: i.e thetas = {'_theta1' 0 0}, or  
     %        input alphas as radians as cell matrix, i.e alphas = {0 pi/2 pi/4}
-    %        input a as numbers as cell matrix, i.e a = {a1 0 0}
+    %        input a as numbers as cell matrix, i.e a = {'a1' 0 0}
     %        input d as numbers or variables as cell matrix: FOR JOINT VARIABLES, 
     %           INPUT A '_' NEXT TO THE VARIABLE: i.e d = {0 'd2' '_d3'}
     %        input jointTypes as a list of joint types, i.e jointTypes = ['R', 'P', 'P']
@@ -103,9 +104,11 @@ function [B_sum, Jp_l, Jo_l, Jp_m, Jo_m] = inertia_matrix(thetas, alphas, a, d, 
         end
     end
 
+    kr_list = {};
     for i = 1:number_joints
         Jo_m{i} = sym(zeros(3, number_joints));
         krm_i = sym(sprintf('krm%d', i));
+        kr_list{i} = krm_i;
         for j=1:number_joints
             if j < i
                 Jo_m{i}(:, j) = Jo_l{i}(:, j);

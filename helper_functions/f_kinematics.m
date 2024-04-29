@@ -1,5 +1,6 @@
 %% Generates the forward kinematics T0H cell array with T0H{i} matricies.
-function [T0H, T0H_sym, joint_variables] = f_kinematics(thetas, alphas, a, d)
+function [T0H, T0H_sym, joint_variables, sym_joint_variables] = f_kinematics(thetas, alphas, a, d)
+    global T0H joint_variables sym_joint_variables
     % This funciton calculates the T0H array (1xn array with n T0H 4x4
     % matricies), from a list of thetas, alphas, a's, and d's. This
     % function returns the calculated T0H and the symbolic T0H, as a
@@ -94,6 +95,7 @@ function [T0H, T0H_sym, joint_variables] = f_kinematics(thetas, alphas, a, d)
         T0H{i} = simplify(T0H{i});
     end
     joint_variables = joint_variables';
+    sym_joint_variables = sym(joint_variables);
 end
 
 function mixedArray = createMixedArray(inputArray)

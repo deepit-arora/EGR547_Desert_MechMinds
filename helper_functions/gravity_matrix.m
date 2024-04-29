@@ -41,7 +41,7 @@ function gravity_terms = gravity_matrix(thetas, alphas, a, d, jointTypes, g0)
     g0 = g0';
 
     % Getting initial intertia matrix
-    [B, Jp_l, Jo_l, Jp_m, Jo_m] = inertia_matrix(thetas, alphas, a, d, jointTypes);
+    [B_sum, Jp_l, Jo_l, Jp_m, Jo_m, Il_list, Im_list, ml_list, mm_list] = inertia_matrix(thetas, alphas, a, d, jointTypes);
     
     for i=1:number_joints
         g{i} = sym(zeros(3, 1));

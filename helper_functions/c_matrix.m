@@ -16,7 +16,7 @@ function c = c_matrix(thetas, alphas, a, d, jointTypes)
     
     [~, ~, joint_variables] = f_kinematics(thetas, alphas, a, d);
 
-    [B_sum, ~, ~, ~, ~] = inertia_matrix(thetas, alphas, a, d, jointTypes);
+    [B_sum, ~, ~, ~, ~, ~, ~, ~, ~, ~] = inertia_matrix(thetas, alphas, a, d, jointTypes);
 
     number_joints = length(thetas);
     % setting up and getting c matrix
