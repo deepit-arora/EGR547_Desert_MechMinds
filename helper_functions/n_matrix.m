@@ -1,5 +1,5 @@
 %% Derive n(q, qdot) Matrix based on DH inputs
-function n = n_matrix(thetas, alphas, a, d, jointTypes, g0, friction_coeff)
+function n = n_matrix(thetas, alphas, a, d, jointTypes, g0, friction_coeff_numeric)
     % This function accepts DH parameters, gravity matrix, and friction
     % coefficient, and returns the n_q_qdot matrix as a symbolic matrix.
 
@@ -12,14 +12,13 @@ function n = n_matrix(thetas, alphas, a, d, jointTypes, g0, friction_coeff)
     %           INPUT A '_' NEXT TO THE VARIABLE: i.e d = {0 'd2' '_d3'}
     %        input jointTypes as a list of joint types, i.e jointTypes = ['R', 'P', 'P']
     %        input g0 as the initial gravity matrix, i.e g0 = [0 0 -9.81]
-    %        input friction_coefficient as a number, i.e friction_coeff = .3
-    %
+    %        input friction_coefficient_numeric as a list, i.e friction_coeff_numeric = [.3 .3 .3]
     % TO RUN THE CODE, DO:
     % n = n_matrix(thetas, alphas, a, d, jointTypes, g0, friction_coeff)
 
 
     % getting joint variables
-    [~, ~, joint_variables] = f_kinematics(thetas, alphas, a, d);
+    [~, ~, joint_variables, ~] = f_kinematics(thetas, alphas, a, d);
     
     % getting q dot
     for i = 1:length(joint_variables)
@@ -34,6 +33,6 @@ function n = n_matrix(thetas, alphas, a, d, jointTypes, g0, friction_coeff)
     gravity_terms = gravity_matrix(thetas, alphas, a, d, jointTypes, g0);
 
     % n(q, qdot) = C*q_dot*F*q_dot (Friction coef) + g (gravity terms)
-    n = sym(c)*sym(joint_variables_dot) + sym(friction_coeff)*sym(joint_variables_dot) + sym(gravity_terms);
+    n = sym(c)*sym(joint_variables_dot) + friction_coeff_numeric*sym(joint_variables_dot) + sym(gravity_terms);
     n = simplify(n);
 end

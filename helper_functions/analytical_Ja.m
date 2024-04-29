@@ -16,7 +16,7 @@ function J_a = analytical_Ja(thetas, alphas, a, d)
     number_joints = length(thetas);
     
     % Getting T0H and T0H_symbolic
-    [T0H, ~, joint_variables] = f_kinematics(thetas, alphas, a, d);
+    [T0H, ~, joint_variables, ~] = f_kinematics(thetas, alphas, a, d);
 
 
     % assigning J_a as a 3xn matrix - it is NOT 6xn because we do not
