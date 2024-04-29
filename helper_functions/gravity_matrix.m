@@ -21,12 +21,14 @@ function gravity_terms = gravity_matrix(thetas, alphas, a, d, jointTypes, g0)
     % getting symbolic gravity list
     for i = 1:length(g0)
         if g0(i) ~= 0
+            g_sub_list{i} = sym(sprintf('g%d', i));
             g_list{i} = sym(sprintf('g%d', i));  % Create a symbolic variable g_i
             if g0(i) < 0
                 % When g0(i) is negative, substitute 'g_i' with '-g_i'
                 g_list{i} = subs(g_list{i}, g_list{i}, -g_list{i});
             end
         else
+            g_sub_list{i} = 0;
             g_list{i} = 0;
         end
     end
@@ -58,6 +60,10 @@ function gravity_terms = gravity_matrix(thetas, alphas, a, d, jointTypes, g0)
             end
         end
         gravity_terms{i} = simplify(-g{j});
+    end
+    gravity_terms = sym(gravity_terms);
+    for i=1:length(gravity_terms)
+        gravity_terms(i) = simplify(subs(gravity_terms(i), sym(g_sub_list), g0'));
     end
     gravity_terms = gravity_terms';
 end
