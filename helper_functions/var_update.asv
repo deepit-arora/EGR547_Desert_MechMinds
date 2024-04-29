@@ -29,46 +29,38 @@ for k = 1:length(variableNames)
     assignin('base', variableNames{k}, currentData');
 end
 
-% % CONTROL TABLE
-% contVariableNames = {'intial_xyz', 'intial_phi_theta_rho', 'desired_xyz', 'des_phi_theta_rho', 'num_theta', 'num_aplhpa', 'num_a', 'num_d', 'gravity_mat', 'des_time','maxEF_accel'};
-% for k = 1:length(variableNames)
-%     currentData = exportedData.(variableNames{k}); % Access table data by column name
-% 
-%     if isnumeric(currentData)
-%         % Handle numeric data: remove NaNs, ensure it is a column vector
-%         currentData = currentData(~isnan(currentData));
-%         if size(currentData, 1) == 1 && size(currentData, 2) > 1
-%             currentData = currentData'; % Transpose if single row
-%         end
-%     else
-%         % Handle string or character data: concatenate strings if needed, ensure column vector
-%         if iscell(currentData)
-%             % Flatten cell array of strings into a single character vector or string array
-%             currentData = string(currentData); % Convert cell array to string array
-%             currentData = currentData(~ismissing(currentData)); % Remove empty entries
-%         end
-%         if isstring(currentData) && numel(currentData) > 1
-%             currentData = strjoin(currentData, ', '); % Join all strings with a comma if needed
-%         end
-%     end
-%     
-%     % Handle cases where the entire column is empty or non-applicable data
-%     if isempty(currentData)
-%         if isnumeric(currentData)
-%             currentData = NaN; % Use NaN for numeric columns
-%         else
-%             currentData = ""; % Use empty string for string columns
-%         end
-%     end
-% 
-%     assignin('base', variableNames{k}, currentData);
-% end
+% CONTROL TABLE
+contVariableNames = {'intial_xyz', 'intial_phi_theta_rho', 'desired_xyz', 'des_phi_theta_rho', 'num_theta', 'num_aplhpa', 'num_a', 'num_d', 'gravity_mat', 'des_time','maxEF_accel'};
+for k = 1:length(contVariableNames)
+    controlscurrentData = controlsexportedData{:, k};
+    if isnumeric(controlscurrentData)
+        % Remove NaNs and ensure it is a column vector if it is numeric
+        controlscurrentData = controlscurrentData(~isnan(controlscurrentData));
+        if size(controlscurrentData, 1) == 1 && size(controlscurrentData, 2) > 1
+            controlscurrentData = controlscurrentData'; % Transpose if single row
+        end
+    else
+        % For non-numeric data, just ensure it is in column format
+        controlscurrentData = controlscurrentData(~cellfun(@isempty, controlscurrentData));
+        if size(controlscurrentData, 1) == 1 && size(controlscurrentData, 2) > 1
+            controlscurrentData = controlscurrentData';
+        end
+    end
+    % Handle cases where the entire column is empty or non-applicable data
+    if isempty(controlscurrentData)
+        controlscurrentData = NaN; 
+    end
+    str2double(assignin('base', contVariableNames{k}, controlscurrentData');
+end
+
+
+
 
 thetas = evalin('base', 'thetas');
 alphas = evalin('base', 'alphas');
 as = evalin('base', 'as');
 ds = evalin('base', 'ds');
-link_masses =evalin('base', 'link_masses');
+link_masses = evalin('base', 'link_masses');
 motor_mass = evalin('base', 'motor_mass');
 I_motors = evalin('base', 'I_motors');
 I_links = evalin('base', 'I_links');
@@ -84,8 +76,20 @@ end
 
 
 
+% FORMAT FIX
+
+% {'thetas', 'alphas', 'as', 'ds', 'joint_types', 'link_masses', 'motor_mass', 'I_motors', 'I_links', 'trans_ratios', 'friction_coeffs'};
+str2double(assignin('base', contVariableNames{k}, controlscurrentData'));
+str2double(assignin('base', contVariableNames{k}, controlscurrentData'));
+str2double(assignin('base', contVariableNames{k}, controlscurrentData'));
+str2double(assignin('base', contVariableNames{k}, controlscurrentData'));
+str2double(assignin('base', contVariableNames{k}, controlscurrentData'));
+str2double(assignin('base', contVariableNames{k}, controlscurrentData'));
+str2double(assignin('base', contVariableNames{k}, controlscurrentData'));
+str2double(assignin('base', contVariableNames{k}, controlscurrentData'));
+
 % eqns
-%  equations_of_motion = equations_of_motion(thetas, alphas, as, ds, jointTypes, g0)
+equations_of_motion = equations_of_motion(thetas, alphas, as, ds, jointTypes, g0)
 %
 % ja = analytical_Ja(thetas, alphas, as, ds);
 %
@@ -94,6 +98,8 @@ end
 
 
 % assignin('base', "T0H_sym", T0H_sym )
+
+
 
 
 

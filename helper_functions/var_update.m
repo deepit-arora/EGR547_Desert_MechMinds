@@ -50,19 +50,13 @@ for k = 1:length(contVariableNames)
     if isempty(controlscurrentData)
         controlscurrentData = NaN; 
     end
+    controlscurrentData = str2double(controlscurrentData);
     assignin('base', contVariableNames{k}, controlscurrentData');
 end
 
-thetas = evalin('base', 'thetas');
-alphas = evalin('base', 'alphas');
-as = evalin('base', 'as');
-ds = evalin('base', 'ds');
-link_masses =evalin('base', 'link_masses');
-motor_mass = evalin('base', 'motor_mass');
-I_motors = evalin('base', 'I_motors');
-I_links = evalin('base', 'I_links');
 
-joint_types = evalin('base', 'joint_types');
+
+
 
 if exist('joint_types', 'var') == 1  
     max_length = max(cellfun(@length, joint_types));
@@ -72,9 +66,46 @@ if exist('joint_types', 'var') == 1
 end
 
 
+thetas = evalin('base', 'thetas');
+alphas = evalin('base', 'alphas');
+as = evalin('base', 'as');
+ds = evalin('base', 'ds');
+link_masses = evalin('base', 'link_masses');
+motor_mass = evalin('base', 'motor_mass');
+I_motors = evalin('base', 'I_motors');
+trans_ratios = evalin('base', 'trans_ratios');
+friction_coeffs = evalin('base', 'friction_coeffs');
+I_links = evalin('base', 'I_links');
+joint_types = evalin('base', 'joint_types');
+gravity_mat = evalin('base', 'gravity_mat');
+joint_types_list = evalin('base', 'joint_types_list');
+
+
+% FORMAT FIX
+
+% {'thetas', 'alphas', 'as', 'ds', 'joint_types', 'link_masses', 'motor_mass', 'I_motors', 'I_links', 'trans_ratios', 'friction_coeffs'};
+link_masses = str2double(link_masses);
+motor_mass = str2double(motor_mass);
+I_motors = str2double(I_motors);
+I_links = str2double(I_links);
+trans_ratios = str2double(trans_ratios);
+friction_coeffs = str2double(friction_coeffs);
+
+assignin('base', 'link_masses', link_masses);
+assignin('base', 'motor_mass', motor_mass);
+assignin('base', 'I_motors', I_motors);
+assignin('base', 'I_links', I_links);
+assignin('base', 'trans_ratios', trans_ratios);
+assignin('base', 'friction_coeffs', friction_coeffs);
 
 % eqns
-%  equations_of_motion = equations_of_motion(thetas, alphas, as, ds, jointTypes, g0)
+equations = equations_of_motion(thetas, alphas, as, ds, joint_types_list, gravity_mat, ...
+    I_links, I_motors, link_masses, motor_mass, trans_ratios, friction_coeffs);
+assignin('base', 'equations', equations);
+
+% plotting equation
+plot_equations = return_plots_equations(equations);
+assignin('base', 'plot_equations', plot_equations);
 %
 % ja = analytical_Ja(thetas, alphas, as, ds);
 %
@@ -83,6 +114,8 @@ end
 
 
 % assignin('base', "T0H_sym", T0H_sym )
+
+
 
 
 

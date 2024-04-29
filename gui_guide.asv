@@ -115,7 +115,7 @@ var_update(exportedData,controlsexportedData);
 %random eqn
 syms x
 a = rand; b = rand; c = rand;
-symbExpr = a*x^2+ c;  % Example quadratic equation
+symbExpr = a*x^2 + b*x + c;  % Example quadratic equation
 latexStr = latex(symbExpr);
 
 % eqn1
@@ -291,12 +291,10 @@ if controlSelectedObj == handles.compliance_control
     axesHandle7 = handles.axes7;
     axes(axesHandle7);
     cla(axesHandle7, 'reset'); 
-    plot(axesHandle7, rand(10,1), rand(10,1), 'b', rand(10,1), rand(10,1), 'r--'); % Blue solid and red dashed lines
+    plot(axesHandle7, rand(10,1), rand(10,1));
     xlabel(axesHandle7, 'x axis');
     ylabel(axesHandle7, 'y axis');
     title(axesHandle7, 'Compliance Plot 1');
-    legend(axesHandle7,'desired', 'actual')
-    
     % plot 8
     axesHandle8 = handles.axes8;
     axes(axesHandle8);
@@ -305,26 +303,17 @@ if controlSelectedObj == handles.compliance_control
     xlabel(axesHandle8, 'x axis');
     ylabel(axesHandle8, 'y axis');
     title(axesHandle8, 'Compliance Plot 2');
+   
 
 
 elseif controlSelectedObj == handles.impedence_control
-    % plot 7
-    axesHandle7 = handles.axes7;
-    axes(axesHandle7);
-    cla(axesHandle7, 'reset'); 
-    plot(axesHandle7, rand(10,1), rand(10,1), 'b', rand(10,1), rand(10,1), 'r--'); % Blue solid and red dashed lines
-    xlabel(axesHandle7, 'x axis');
-    ylabel(axesHandle7, 'y axis');
-    title(axesHandle7, 'Impedance Plot 1');
-    legend(axesHandle7,'desired', 'actual')
-    
-    % plot 8
+    % Similar actions for impedence_control
     axesHandle8 = handles.axes8;
     axes(axesHandle8);
-    cla(axesHandle8, 'reset'); 
+    cla(axesHandle8, 'reset'); % Clear the axes
+    % Plot something relevant for impedence control
     plot(axesHandle8, rand(10,1), rand(10,1));
     xlabel(axesHandle8, 'x axis');
     ylabel(axesHandle8, 'y axis');
-    title(axesHandle8, 'Impedance Plot 2');
-   
+    title(axesHandle8, 'Impedance Plot');
 end
