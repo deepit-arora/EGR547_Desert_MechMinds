@@ -25,7 +25,7 @@ function equations = equations_of_motion(thetas, alphas, a, d, jointTypes, g0, .
     number_joints = length(thetas);
 
     % Combining all equation functions
-    [~, ~, joint_variables] = f_kinematics(thetas, alphas, a, d);
+    [~, ~, joint_variables, ~] = f_kinematics(thetas, alphas, a, d);
     [B_sum, ~, ~, ~, ~, Il_list, Im_list, ml_list, mm_list, kr_list] = inertia_matrix(thetas, alphas, a, d, jointTypes);
     gravity_terms = gravity_matrix(thetas, alphas, a, d, jointTypes, g0);
     c = c_matrix(thetas, alphas, a, d, jointTypes);

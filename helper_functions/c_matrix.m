@@ -14,7 +14,7 @@ function c = c_matrix(thetas, alphas, a, d, jointTypes)
     % TO RUN THE CODE, DO:
     %     c = c_matrix(thetas, alphas, a, d, jointTypes)
     
-    [~, ~, joint_variables] = f_kinematics(thetas, alphas, a, d);
+    [~, ~, joint_variables, ~] = f_kinematics(thetas, alphas, a, d);
 
     [B_sum, ~, ~, ~, ~, ~, ~, ~, ~, ~] = inertia_matrix(thetas, alphas, a, d, jointTypes);
 
