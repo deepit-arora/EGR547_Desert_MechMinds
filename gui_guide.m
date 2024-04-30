@@ -22,7 +22,7 @@ function varargout = gui_guide(varargin)
 
 % Edit the above text to modify the response to help gui_guide
 
-% Last Modified by GUIDE v2.5 29-Apr-2024 15:18:29
+% Last Modified by GUIDE v2.5 29-Apr-2024 17:01:45
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -328,3 +328,15 @@ elseif controlSelectedObj == handles.impedence_control
     title(axesHandle8, 'Impedance Plot 2');
    
 end
+
+
+% --- Executes when entered data in editable cell(s) in controlsData.
+function controlsData_CellEditCallback(hObject, eventdata, handles)
+% hObject    handle to controlsData (see GCBO)
+% eventdata  structure with the following fields (see MATLAB.UI.CONTROL.TABLE)
+%	Indices: row and column indices of the cell(s) edited
+%	PreviousData: previous data for the cell(s) edited
+%	EditData: string(s) entered by the user
+%	NewData: EditData or its converted form set on the Data property. Empty if Data was not changed
+%	Error: error string when failed to convert EditData to appropriate value for Data
+% handles    structure with handles and user data (see GUIDATA)
