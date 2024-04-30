@@ -91,8 +91,8 @@ function dataTable_CreateFcn(hObject, eventdata, handles)
 % --- Executes on button press in exportButton.
 % Callback function for the button to export table data
 function exportButton_Callback(hObject, eventdata, handles)
-
-
+clear all
+clc
 % Fetch the data from the table
 dataTable = findobj('Tag', 'dataTable'); % find table by Tag
 tableData = get(dataTable, 'Data'); % get data from table
