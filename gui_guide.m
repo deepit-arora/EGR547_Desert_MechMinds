@@ -91,8 +91,7 @@ function dataTable_CreateFcn(hObject, eventdata, handles)
 % --- Executes on button press in exportButton.
 % Callback function for the button to export table data
 function exportButton_Callback(hObject, eventdata, handles)
-clear all
-clc
+
 % Fetch the data from the table
 dataTable = findobj('Tag', 'dataTable'); % find table by Tag
 tableData = get(dataTable, 'Data'); % get data from table
@@ -124,6 +123,7 @@ friction_coeffs = evalin('base', 'friction_coeffs');
 I_links = evalin('base', 'I_links');
 gravity_mat = evalin('base', 'gravity_mat');
 joint_types_list = evalin('base', 'joint_types_list');
+des_time = evalin('base', 'des_time');
 
 % equations 
 equations = equations_of_motion(thetas, alphas, as, ds, joint_types_list, gravity_mat, ...
@@ -138,83 +138,14 @@ symbExpr = a*x^2+ c;  % Example quadratic equation
 latexStr = latex(symbExpr);
 
 
-% eqn1
+% EQN 1
 latexStr1 = latex(equations);
-
-axes(handles.eqn1); % Ensure 'axesEquation' is your axes' tag
-cla; % Clear axes
-text('Units', 'normalized', 'Position', [0.5 0.5], 'String', ['$' latexStr1 '$'], 'Interpreter', 'latex', 'HorizontalAlignment', 'center', 'FontSize', 9);
-
-% 
-% % eqn2
-% axes(handles.eqn2); % Ensure 'axesEquation' is your axes' tag
-% cla; % Clear axes
-% set(handles.eqn2, 'Visible','off')
-% text('Units', 'normalized', 'Position', [0.5 0.5], 'String', ['$' latexStr '$'], 'Interpreter', 'latex', 'HorizontalAlignment', 'center', 'FontSize', 12);
-% 
-% % eqn3
-% axes(handles.eqn3); % Ensure 'axesEquation' is your axes' tag
-% cla; % Clear axes
-% set(handles.eqn3, 'Visible','off')
-% text('Units', 'normalized', 'Position', [0.5 0.5], 'String', ['$' latexStr '$'], 'Interpreter', 'latex', 'HorizontalAlignment', 'center', 'FontSize', 12);
-% 
-% % eqn4
-% axes(handles.eqn4); % Ensure 'axesEquation' is your axes' tag
-% cla; % Clear axes
-% set(handles.eqn4, 'Visible','off')
-% text('Units', 'normalized', 'Position', [0.5 0.5], 'String', ['$' latexStr '$'], 'Interpreter', 'latex', 'HorizontalAlignment', 'center', 'FontSize', 12);
-% 
-% % eqn5
-% axes(handles.eqn5); % Ensure 'axesEquation' is your axes' tag
-% cla; % Clear axes
-% set(handles.eqn5, 'Visible','off')
-% text('Units', 'normalized', 'Position', [0.5 0.5], 'String', ['$' latexStr '$'], 'Interpreter', 'latex', 'HorizontalAlignment', 'center', 'FontSize', 12);
-% 
-% % eqn6
-% axes(handles.eqn6); % Ensure 'axesEquation' is your axes' tag
-% cla; % Clear axes
-% set(handles.eqn6, 'Visible','off')
-% text('Units', 'normalized', 'Position', [0.5 0.5], 'String', ['$' latexStr '$'], 'Interpreter', 'latex', 'HorizontalAlignment', 'center', 'FontSize', 12);
-
-% % eqn7
-% axes(handles.eqn7); % Ensure 'axesEquation' is your axes' tag
-% cla; % Clear axes
-% set(handles.eqn7, 'Visible','off')
-% text('Units', 'normalized', 'Position', [0.5 0.5], 'String', ['$' latexStr '$'], 'Interpreter', 'latex', 'HorizontalAlignment', 'center', 'FontSize', 12);
-% 
-% % eqn8
-% axes(handles.eqn8); % Ensure 'axesEquation' is your axes' tag
-% cla; % Clear axes
-% set(handles.eqn8, 'Visible','off')
-% text('Units', 'normalized', 'Position', [0.5 0.5], 'String', ['$' latexStr '$'], 'Interpreter', 'latex', 'HorizontalAlignment', 'center', 'FontSize', 12);
-% 
-% % eqn9
-% axes(handles.eqn9); % Ensure 'axesEquation' is your axes' tag
-% cla; % Clear axes
-% set(handles.eqn9, 'Visible','off')
-% text('Units', 'normalized', 'Position', [0.5 0.5], 'String', ['$' latexStr '$'], 'Interpreter', 'latex', 'HorizontalAlignment', 'center', 'FontSize', 12);
-% 
-% % eqn10
-% axes(handles.eqn10); % Ensure 'axesEquation' is your axes' tag
-% cla; % Clear axes
-% set(handles.eqn10, 'Visible','off')
-% text('Units', 'normalized', 'Position', [0.5 0.5], 'String', ['$' latexStr '$'], 'Interpreter', 'latex', 'HorizontalAlignment', 'center', 'FontSize', 12);
-% 
-% % eqn11
-% axes(handles.eqn11); % Ensure 'axesEquation' is your axes' tag
-% cla; % Clear axes
-% set(handles.eqn11, 'Visible','off')
-% text('Units', 'normalized', 'Position', [0.5 0.5], 'String', ['$' latexStr '$'], 'Interpreter', 'latex', 'HorizontalAlignment', 'center', 'FontSize', 12);
-% 
-% % eqn12
-% axes(handles.eqn12); % Ensure 'axesEquation' is your axes' tag
-% cla; % Clear axes
-% set(handles.eqn12, 'Visible','off')
-% text('Units', 'normalized', 'Position', [0.5 0.5], 'String', ['$' latexStr '$'], 'Interpreter', 'latex', 'HorizontalAlignment', 'center', 'FontSize', 12);
+axes(handles.eqn1); 
+cla;
+set(handles.eqn1, 'Visible','off')
+text('Units', 'normalized', 'Position', [0.5 0.5], 'String', ['$' latexStr1 '$'], 'Interpreter', 'latex', 'HorizontalAlignment', 'center', 'FontSize', 11);
 
 % PLOT 1
-
-
 axesHandle1 = handles.axes1;
 axes(axesHandle1);
     cla(axesHandle1, 'reset'); 
@@ -222,7 +153,7 @@ axes(axesHandle1);
 hold on;  % Keep the plot from refreshing each loop iteration
 legendLabels1 = cell(1, length(equations));
 for ii = 1:length(equations)
-    fplot(axesHandle1, subs(equations(ii), varsplotinfo, eval(varsplotinfo)), [0, 10]);
+    fplot(axesHandle1, subs(equations(ii), varsplotinfo, eval(varsplotinfo)), [0, des_time]);
     
     legendLabels1{ii} = sprintf('Equation of Motion %d', ii);
 
@@ -233,86 +164,10 @@ xlabel(axesHandle1,'Time (s)');
 ylabel(axesHandle1, 'Values of Equation of Motion');
 title(axesHandle1, 'Plot of the Equation of Motion');
 legend(axesHandle1, legendLabels1, 'Location', 'best');
-hold off;  % Release the hold on the current plot
-
-% 
-% 
-% %plot 2
-% axesHandle2 = handles.axes2;% Access the axes handle
-% axes(axesHandle2);% Make the GUI's axes current
-% plot(axesHandle2, rand(10,1), rand(10,1)); % Plot something
-% xlabel(axesHandle2,"x axis")
-% ylabel(axesHandle2,"y axis")
-% title(axesHandle2," plot title")
-% 
-% %plot 3
-% axesHandle3 = handles.axes3;% Access the axes handle
-% axes(axesHandle3);% Make the GUI's axes current
-% plot(axesHandle3, rand(10,1), rand(10,1)); % Plot something
-% xlabel(axesHandle3,"x axis")
-% ylabel(axesHandle3,"y axis")
-% title(axesHandle3," plot title")
-% 
-% %plot 4
-% axesHandle4 = handles.axes4;% Access the axes handle
-% axes(axesHandle4);% Make the GUI's axes current
-% plot(axesHandle4, rand(10,1), rand(10,1)); % Plot something
-% xlabel(axesHandle4,"x axis")
-% ylabel(axesHandle4,"y axis")
-% title(axesHandle4," plot title")
-% 
-% %plot 5
-% axesHandle5 = handles.axes5;% Access the axes handle
-% axes(axesHandle5);% Make the GUI's axes current
-% plot(axesHandle5, rand(10,1), rand(10,1)); % Plot something
-% xlabel(axesHandle5,"x axis")
-% ylabel(axesHandle5,"y axis")
-% title(axesHandle5," plot title")
-% 
-% %plot 6
-% axesHandle6 = handles.axes6;% Access the axes handle
-% axes(axesHandle6);% Make the GUI's axes current
-% plot(axesHandle6, rand(10,1), rand(10,1)); % Plot something
-% xlabel(axesHandle6,"x axis")
-% ylabel(axesHandle6,"y axis")
-% title(axesHandle6," plot title")
-
-%plot 7
-% axesHandle7 = handles.axes7;% Access the axes handle
-% axes(axesHandle7);% Make the GUI's axes current
-% plot(axesHandle7, rand(10,1), rand(10,1)); % Plot something
-% xlabel(axesHandle7,"x axis")
-% ylabel(axesHandle7,"y axis")
-% title(axesHandle7," plot title")
-% 
-% %plot 8
-% axesHandle8 = handles.axes8;% Access the axes handle
-% axes(axesHandle8);% Make the GUI's axes current
-% plot(axesHandle8, rand(10,1), rand(10,1)); % Plot something
-% xlabel(axesHandle8,"x axis")
-% ylabel(axesHandle8,"y axis")
-% title(axesHandle8," plot title")
-
-   
-
+hold off;  
 
 % --- If Enable == 'on', executes on mouse press in 5 pixel border.
 % --- Otherwise, executes on mouse press in 5 pixel border or over compliance_control.
-
-
-function compliance_control_ButtonDownFcn(hObject, eventdata, handles)
-% hObject    handle to compliance_control (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-
-% --- If Enable == 'on', executes on mouse press in 5 pixel border.
-% --- Otherwise, executes on mouse press in 5 pixel border or over impedence_control.
-function impedence_control_ButtonDownFcn(hObject, eventdata, handles)
-% hObject    handle to impedence_control (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
 
 
 % --- Executes when selected object is changed in controlSelection.
@@ -322,7 +177,6 @@ function controlSelection_SelectionChangedFcn(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 controlSelectedObj = get(handles.controlSelection, 'SelectedObj');
-disp(controlSelectedObj);
 
 if controlSelectedObj == handles.compliance_control
     % plot 7
@@ -366,15 +220,3 @@ elseif controlSelectedObj == handles.impedence_control
     title(axesHandle8, 'Impedance Plot 2');
    
 end
-
-
-% --- Executes when entered data in editable cell(s) in controlsData.
-function controlsData_CellEditCallback(hObject, eventdata, handles)
-% hObject    handle to controlsData (see GCBO)
-% eventdata  structure with the following fields (see MATLAB.UI.CONTROL.TABLE)
-%	Indices: row and column indices of the cell(s) edited
-%	PreviousData: previous data for the cell(s) edited
-%	EditData: string(s) entered by the user
-%	NewData: EditData or its converted form set on the Data property. Empty if Data was not changed
-%	Error: error string when failed to convert EditData to appropriate value for Data
-% handles    structure with handles and user data (see GUIDATA)
