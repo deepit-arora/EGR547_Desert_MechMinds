@@ -22,9 +22,9 @@ function [T0H, T0H_sym, joint_variables, sym_joint_variables] = f_kinematics(the
     end
     
     
-    T = @(theta,alpha,a,d) [cos(theta) -sin(theta)*cos(alpha) sin(theta)*sin(alpha) a*cos(theta);
-        sin(theta) cos(theta)*cos(alpha) -cos(theta)*sin(alpha) a*sin(theta);
-        0 sin(alpha) cos(alpha) d;
+    T = @(theta,alpha,a,d) [cosd(theta) -sind(theta)*cosd(alpha) sind(theta)*sind(alpha) a*cosd(theta);
+        sind(theta) cosd(theta)*cosd(alpha) -cosd(theta)*sind(alpha) a*sind(theta);
+        0 sind(alpha) cosd(alpha) d;
         0 0 0 1];
     
     % Creating mixed symbolic array for user inputs
