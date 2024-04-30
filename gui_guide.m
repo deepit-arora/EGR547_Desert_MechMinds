@@ -130,7 +130,7 @@ equations = equations_of_motion(thetas, alphas, as, ds, joint_types_list, gravit
 I_links, I_motors, link_masses, motor_mass, trans_ratios, friction_coeffs);
 [plotinfo varsplotinfo] = return_plots_equations(equations);
 
-
+assignin('base','equations');       %incase its too big to show
 %random eqn
 syms x
 a = rand; b = rand; c = rand;
@@ -143,7 +143,7 @@ latexStr1 = latex(equations);
 axes(handles.eqn1); 
 cla;
 set(handles.eqn1, 'Visible','off')
-text('Units', 'normalized', 'Position', [0.5 0.5], 'String', ['$' latexStr1 '$'], 'Interpreter', 'latex', 'HorizontalAlignment', 'center', 'FontSize', 11);
+text('Units', 'normalized', 'Position', [0.5 0.5], 'String', ['$' latexStr1 '$'], 'Interpreter', 'latex', 'HorizontalAlignment', 'center', 'FontSize', 10);
 
 % PLOT 1
 axesHandle1 = handles.axes1;
