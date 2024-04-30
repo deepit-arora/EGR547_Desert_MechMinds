@@ -111,6 +111,25 @@ disp('Data has been exported to the base workspace under the variable name "expo
 % VARS 
 var_update(exportedData,controlsexportedData);
 
+% get data from workspace
+thetas = evalin('base', 'thetas');
+alphas = evalin('base', 'alphas');
+as = evalin('base', 'as');
+ds = evalin('base', 'ds');
+link_masses = evalin('base', 'link_masses');
+motor_mass = evalin('base', 'motor_mass');
+I_motors = evalin('base', 'I_motors');
+trans_ratios = evalin('base', 'trans_ratios');
+friction_coeffs = evalin('base', 'friction_coeffs');
+I_links = evalin('base', 'I_links');
+gravity_mat = evalin('base', 'gravity_mat');
+joint_types_list = evalin('base', 'joint_types_list');
+
+% equations 
+equations = equations_of_motion(thetas, alphas, as, ds, joint_types_list, gravity_mat, ...
+I_links, I_motors, link_masses, motor_mass, trans_ratios, friction_coeffs);
+[plotinfo varsplotinfo] = return_plots_equations(equations);
+
 
 %random eqn
 syms x
@@ -118,126 +137,145 @@ a = rand; b = rand; c = rand;
 symbExpr = a*x^2+ c;  % Example quadratic equation
 latexStr = latex(symbExpr);
 
+
 % eqn1
+latexStr1 = latex(equations);
+
 axes(handles.eqn1); % Ensure 'axesEquation' is your axes' tag
 cla; % Clear axes
-set(handles.eqn1, 'Visible','off')
-text('Units', 'normalized', 'Position', [0.5 0.5], 'String', ['$' latexStr '$'], 'Interpreter', 'latex', 'HorizontalAlignment', 'center', 'FontSize', 12);
+text('Units', 'normalized', 'Position', [0.5 0.5], 'String', ['$' latexStr1 '$'], 'Interpreter', 'latex', 'HorizontalAlignment', 'center', 'FontSize', 9);
+
+% 
+% % eqn2
+% axes(handles.eqn2); % Ensure 'axesEquation' is your axes' tag
+% cla; % Clear axes
+% set(handles.eqn2, 'Visible','off')
+% text('Units', 'normalized', 'Position', [0.5 0.5], 'String', ['$' latexStr '$'], 'Interpreter', 'latex', 'HorizontalAlignment', 'center', 'FontSize', 12);
+% 
+% % eqn3
+% axes(handles.eqn3); % Ensure 'axesEquation' is your axes' tag
+% cla; % Clear axes
+% set(handles.eqn3, 'Visible','off')
+% text('Units', 'normalized', 'Position', [0.5 0.5], 'String', ['$' latexStr '$'], 'Interpreter', 'latex', 'HorizontalAlignment', 'center', 'FontSize', 12);
+% 
+% % eqn4
+% axes(handles.eqn4); % Ensure 'axesEquation' is your axes' tag
+% cla; % Clear axes
+% set(handles.eqn4, 'Visible','off')
+% text('Units', 'normalized', 'Position', [0.5 0.5], 'String', ['$' latexStr '$'], 'Interpreter', 'latex', 'HorizontalAlignment', 'center', 'FontSize', 12);
+% 
+% % eqn5
+% axes(handles.eqn5); % Ensure 'axesEquation' is your axes' tag
+% cla; % Clear axes
+% set(handles.eqn5, 'Visible','off')
+% text('Units', 'normalized', 'Position', [0.5 0.5], 'String', ['$' latexStr '$'], 'Interpreter', 'latex', 'HorizontalAlignment', 'center', 'FontSize', 12);
+% 
+% % eqn6
+% axes(handles.eqn6); % Ensure 'axesEquation' is your axes' tag
+% cla; % Clear axes
+% set(handles.eqn6, 'Visible','off')
+% text('Units', 'normalized', 'Position', [0.5 0.5], 'String', ['$' latexStr '$'], 'Interpreter', 'latex', 'HorizontalAlignment', 'center', 'FontSize', 12);
+
+% % eqn7
+% axes(handles.eqn7); % Ensure 'axesEquation' is your axes' tag
+% cla; % Clear axes
+% set(handles.eqn7, 'Visible','off')
+% text('Units', 'normalized', 'Position', [0.5 0.5], 'String', ['$' latexStr '$'], 'Interpreter', 'latex', 'HorizontalAlignment', 'center', 'FontSize', 12);
+% 
+% % eqn8
+% axes(handles.eqn8); % Ensure 'axesEquation' is your axes' tag
+% cla; % Clear axes
+% set(handles.eqn8, 'Visible','off')
+% text('Units', 'normalized', 'Position', [0.5 0.5], 'String', ['$' latexStr '$'], 'Interpreter', 'latex', 'HorizontalAlignment', 'center', 'FontSize', 12);
+% 
+% % eqn9
+% axes(handles.eqn9); % Ensure 'axesEquation' is your axes' tag
+% cla; % Clear axes
+% set(handles.eqn9, 'Visible','off')
+% text('Units', 'normalized', 'Position', [0.5 0.5], 'String', ['$' latexStr '$'], 'Interpreter', 'latex', 'HorizontalAlignment', 'center', 'FontSize', 12);
+% 
+% % eqn10
+% axes(handles.eqn10); % Ensure 'axesEquation' is your axes' tag
+% cla; % Clear axes
+% set(handles.eqn10, 'Visible','off')
+% text('Units', 'normalized', 'Position', [0.5 0.5], 'String', ['$' latexStr '$'], 'Interpreter', 'latex', 'HorizontalAlignment', 'center', 'FontSize', 12);
+% 
+% % eqn11
+% axes(handles.eqn11); % Ensure 'axesEquation' is your axes' tag
+% cla; % Clear axes
+% set(handles.eqn11, 'Visible','off')
+% text('Units', 'normalized', 'Position', [0.5 0.5], 'String', ['$' latexStr '$'], 'Interpreter', 'latex', 'HorizontalAlignment', 'center', 'FontSize', 12);
+% 
+% % eqn12
+% axes(handles.eqn12); % Ensure 'axesEquation' is your axes' tag
+% cla; % Clear axes
+% set(handles.eqn12, 'Visible','off')
+% text('Units', 'normalized', 'Position', [0.5 0.5], 'String', ['$' latexStr '$'], 'Interpreter', 'latex', 'HorizontalAlignment', 'center', 'FontSize', 12);
+
+% PLOT 1
 
 
-% eqn2
-axes(handles.eqn2); % Ensure 'axesEquation' is your axes' tag
-cla; % Clear axes
-set(handles.eqn2, 'Visible','off')
-text('Units', 'normalized', 'Position', [0.5 0.5], 'String', ['$' latexStr '$'], 'Interpreter', 'latex', 'HorizontalAlignment', 'center', 'FontSize', 12);
+axesHandle1 = handles.axes1;
+axes(axesHandle1);
+    cla(axesHandle1, 'reset'); 
 
-% eqn3
-axes(handles.eqn3); % Ensure 'axesEquation' is your axes' tag
-cla; % Clear axes
-set(handles.eqn3, 'Visible','off')
-text('Units', 'normalized', 'Position', [0.5 0.5], 'String', ['$' latexStr '$'], 'Interpreter', 'latex', 'HorizontalAlignment', 'center', 'FontSize', 12);
+hold on;  % Keep the plot from refreshing each loop iteration
+legendLabels1 = cell(1, length(equations));
+for ii = 1:length(equations)
+    fplot(axesHandle1, subs(equations(ii), varsplotinfo, eval(varsplotinfo)), [0, 10]);
+    
+    legendLabels1{ii} = sprintf('Equation of Motion %d', ii);
 
-% eqn4
-axes(handles.eqn4); % Ensure 'axesEquation' is your axes' tag
-cla; % Clear axes
-set(handles.eqn4, 'Visible','off')
-text('Units', 'normalized', 'Position', [0.5 0.5], 'String', ['$' latexStr '$'], 'Interpreter', 'latex', 'HorizontalAlignment', 'center', 'FontSize', 12);
+end
 
-% eqn5
-axes(handles.eqn5); % Ensure 'axesEquation' is your axes' tag
-cla; % Clear axes
-set(handles.eqn5, 'Visible','off')
-text('Units', 'normalized', 'Position', [0.5 0.5], 'String', ['$' latexStr '$'], 'Interpreter', 'latex', 'HorizontalAlignment', 'center', 'FontSize', 12);
+% Label the axes and give a title to the graph
+xlabel(axesHandle1,'Time (s)');
+ylabel(axesHandle1, 'Values of Equation of Motion');
+title(axesHandle1, 'Plot of the Equation of Motion');
+legend(axesHandle1, legendLabels1, 'Location', 'best');
+hold off;  % Release the hold on the current plot
 
-% eqn6
-axes(handles.eqn6); % Ensure 'axesEquation' is your axes' tag
-cla; % Clear axes
-set(handles.eqn6, 'Visible','off')
-text('Units', 'normalized', 'Position', [0.5 0.5], 'String', ['$' latexStr '$'], 'Interpreter', 'latex', 'HorizontalAlignment', 'center', 'FontSize', 12);
-
-% eqn7
-axes(handles.eqn7); % Ensure 'axesEquation' is your axes' tag
-cla; % Clear axes
-set(handles.eqn7, 'Visible','off')
-text('Units', 'normalized', 'Position', [0.5 0.5], 'String', ['$' latexStr '$'], 'Interpreter', 'latex', 'HorizontalAlignment', 'center', 'FontSize', 12);
-
-% eqn8
-axes(handles.eqn8); % Ensure 'axesEquation' is your axes' tag
-cla; % Clear axes
-set(handles.eqn8, 'Visible','off')
-text('Units', 'normalized', 'Position', [0.5 0.5], 'String', ['$' latexStr '$'], 'Interpreter', 'latex', 'HorizontalAlignment', 'center', 'FontSize', 12);
-
-% eqn9
-axes(handles.eqn9); % Ensure 'axesEquation' is your axes' tag
-cla; % Clear axes
-set(handles.eqn9, 'Visible','off')
-text('Units', 'normalized', 'Position', [0.5 0.5], 'String', ['$' latexStr '$'], 'Interpreter', 'latex', 'HorizontalAlignment', 'center', 'FontSize', 12);
-
-% eqn10
-axes(handles.eqn10); % Ensure 'axesEquation' is your axes' tag
-cla; % Clear axes
-set(handles.eqn10, 'Visible','off')
-text('Units', 'normalized', 'Position', [0.5 0.5], 'String', ['$' latexStr '$'], 'Interpreter', 'latex', 'HorizontalAlignment', 'center', 'FontSize', 12);
-
-% eqn11
-axes(handles.eqn11); % Ensure 'axesEquation' is your axes' tag
-cla; % Clear axes
-set(handles.eqn11, 'Visible','off')
-text('Units', 'normalized', 'Position', [0.5 0.5], 'String', ['$' latexStr '$'], 'Interpreter', 'latex', 'HorizontalAlignment', 'center', 'FontSize', 12);
-
-% eqn12
-axes(handles.eqn12); % Ensure 'axesEquation' is your axes' tag
-cla; % Clear axes
-set(handles.eqn12, 'Visible','off')
-text('Units', 'normalized', 'Position', [0.5 0.5], 'String', ['$' latexStr '$'], 'Interpreter', 'latex', 'HorizontalAlignment', 'center', 'FontSize', 12);
-
-%plot 1
-axesHandle1 = handles.axes1;% Access the axes handle
-axes(axesHandle1);% Make the GUI's axes current
-plot(axesHandle1, rand(10,1), rand(10,1)); % Plot something
-xlabel(axesHandle1,"x axis")
-ylabel(axesHandle1,"y axis")
-title(axesHandle1," plot title")
-
-%plot 2
-axesHandle2 = handles.axes2;% Access the axes handle
-axes(axesHandle2);% Make the GUI's axes current
-plot(axesHandle2, rand(10,1), rand(10,1)); % Plot something
-xlabel(axesHandle2,"x axis")
-ylabel(axesHandle2,"y axis")
-title(axesHandle2," plot title")
-
-%plot 3
-axesHandle3 = handles.axes3;% Access the axes handle
-axes(axesHandle3);% Make the GUI's axes current
-plot(axesHandle3, rand(10,1), rand(10,1)); % Plot something
-xlabel(axesHandle3,"x axis")
-ylabel(axesHandle3,"y axis")
-title(axesHandle3," plot title")
-
-%plot 4
-axesHandle4 = handles.axes4;% Access the axes handle
-axes(axesHandle4);% Make the GUI's axes current
-plot(axesHandle4, rand(10,1), rand(10,1)); % Plot something
-xlabel(axesHandle4,"x axis")
-ylabel(axesHandle4,"y axis")
-title(axesHandle4," plot title")
-
-%plot 5
-axesHandle5 = handles.axes5;% Access the axes handle
-axes(axesHandle5);% Make the GUI's axes current
-plot(axesHandle5, rand(10,1), rand(10,1)); % Plot something
-xlabel(axesHandle5,"x axis")
-ylabel(axesHandle5,"y axis")
-title(axesHandle5," plot title")
-
-%plot 6
-axesHandle6 = handles.axes6;% Access the axes handle
-axes(axesHandle6);% Make the GUI's axes current
-plot(axesHandle6, rand(10,1), rand(10,1)); % Plot something
-xlabel(axesHandle6,"x axis")
-ylabel(axesHandle6,"y axis")
-title(axesHandle6," plot title")
+% 
+% 
+% %plot 2
+% axesHandle2 = handles.axes2;% Access the axes handle
+% axes(axesHandle2);% Make the GUI's axes current
+% plot(axesHandle2, rand(10,1), rand(10,1)); % Plot something
+% xlabel(axesHandle2,"x axis")
+% ylabel(axesHandle2,"y axis")
+% title(axesHandle2," plot title")
+% 
+% %plot 3
+% axesHandle3 = handles.axes3;% Access the axes handle
+% axes(axesHandle3);% Make the GUI's axes current
+% plot(axesHandle3, rand(10,1), rand(10,1)); % Plot something
+% xlabel(axesHandle3,"x axis")
+% ylabel(axesHandle3,"y axis")
+% title(axesHandle3," plot title")
+% 
+% %plot 4
+% axesHandle4 = handles.axes4;% Access the axes handle
+% axes(axesHandle4);% Make the GUI's axes current
+% plot(axesHandle4, rand(10,1), rand(10,1)); % Plot something
+% xlabel(axesHandle4,"x axis")
+% ylabel(axesHandle4,"y axis")
+% title(axesHandle4," plot title")
+% 
+% %plot 5
+% axesHandle5 = handles.axes5;% Access the axes handle
+% axes(axesHandle5);% Make the GUI's axes current
+% plot(axesHandle5, rand(10,1), rand(10,1)); % Plot something
+% xlabel(axesHandle5,"x axis")
+% ylabel(axesHandle5,"y axis")
+% title(axesHandle5," plot title")
+% 
+% %plot 6
+% axesHandle6 = handles.axes6;% Access the axes handle
+% axes(axesHandle6);% Make the GUI's axes current
+% plot(axesHandle6, rand(10,1), rand(10,1)); % Plot something
+% xlabel(axesHandle6,"x axis")
+% ylabel(axesHandle6,"y axis")
+% title(axesHandle6," plot title")
 
 %plot 7
 % axesHandle7 = handles.axes7;% Access the axes handle

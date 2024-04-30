@@ -91,9 +91,12 @@ assignin('base', 'friction_coeffs', friction_coeffs);
 
 
 % eqns
-equations = equations_of_motion(thetas, alphas, as, ds, joint_types_list, gravity_mat, ...
-    I_links, I_motors, link_masses, motor_mass, trans_ratios, friction_coeffs);
-assignin('base', 'equations', equations);
+% equations = equations_of_motion(thetas, alphas, as, ds, joint_types_list, gravity_mat, ...
+% I_links, I_motors, link_masses, motor_mass, trans_ratios, friction_coeffs);
+% [plotinfo varsplotinfo] = return_plots_equations(equations);
+% assignin('base', 'equations', equations);
+% assignin('base', 'plotinfo', plotinfo);
+% assignin('base', 'varsplotinfo', varsplotinfo);
 
 % plotting equation
 % plot_equations = return_plots_equations(equations);

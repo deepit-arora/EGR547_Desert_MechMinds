@@ -1,5 +1,5 @@
 %% Plotting the equations of motion based on the joint variables
-function plotinfo = return_plots_equations(equations)
+function [plotinfo, vars] = return_plots_equations(equations)
     vars = symvar(equations);
     t = sym('t', 'real'); % Define a symbolic variable for time
     for i = 1:length(vars)
@@ -9,11 +9,10 @@ function plotinfo = return_plots_equations(equations)
     end
     
     % Getting Equations of motion and assigning them
-    plotinfo = sym(zeros(length(equations), 2));
+    plotinfo = sym(zeros(length(equations), 1));
     if numel(equations) > 0
         for i=1:length(equations)
             plotinfo(i, 1) = (equations(i));
-            plotinfo(i, 2) = vars;
         end
     end
     % FOR PLOTTING:
