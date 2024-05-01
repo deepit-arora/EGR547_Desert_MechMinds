@@ -130,7 +130,7 @@ equations = equations_of_motion(thetas, alphas, as, ds, joint_types_list, gravit
 I_links, I_motors, link_masses, motor_mass, trans_ratios, friction_coeffs);
 [plotinfo varsplotinfo] = return_plots_equations(equations);
 
-assignin('base','equations');       %incase its too big to show
+assignin('base','equations', equations);       %incase its too big to show
 %random eqn
 syms x
 a = rand; b = rand; c = rand;
