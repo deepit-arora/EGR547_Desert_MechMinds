@@ -12,5 +12,4 @@ function my_robot = create_robot(jointTypes, control_thetas, control_alphas, con
     end
     
     my_robot = SerialLink(L);
-    assignin("caller", "my_robot", my_robot)
 end
