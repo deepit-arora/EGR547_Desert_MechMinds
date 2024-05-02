@@ -4,7 +4,7 @@ function [qvec, qdotvec, xevec, hevec, tvec] = run_compliance(desired_position, 
     desired_kd, desired_k)
     % This function computes the q, q_dot, end effector position, and forces using
     % compliance control for specified robot.
-    num_joint_variables = length(initial_joint_variables);
+    num_joint_variables = my_robot.n;
     global jac0 tau;
     
 % initial euler angles zyz from user
