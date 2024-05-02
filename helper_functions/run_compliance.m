@@ -22,7 +22,7 @@ function [qvec, qdotvec, xevec, hevec, tvec] = run_compliance(desired_position, 
     Te0=Te0*[eye(3,3) xe0';0 0 0 1];
     Te=Te0;
 % initial joint parameters
-    q0= R.ikunc(Te0);
+    q0= my_robot.ikunc(Te0);
     q=q0;
     qvec=q;
 % initial velocities are zero
