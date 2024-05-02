@@ -44,12 +44,12 @@ impedance_gains = evalin('base', 'impedance_gains');
 if exist('compliance_gains', 'var')==1
     compliance_kp = compliance_gains(1,:);
     compliance_kd = compliance_gains(2,:);
-    compliance_k = compliance_gains(3,:);
+    compliance_k = compliance_gains(2,:)
     assignin('base', 'compliance_kd', compliance_kd);
     assignin('base', 'compliance_kp', compliance_kp);
-    assignin('base', 'compliance_k', compliance_k);
+        assignin('base', 'compliance_kp', compliance_kp);
 end
-if (exist('impedance_gains', 'var') == 1 && ~isnan(impedance_gains))
+if exist('impedance_gains', 'var')==1
     impedance_kp = impedance_gains(1,:);
     impedance_kd = impedance_gains(2,:);
     impedance_md = impedance_gains(3,:);

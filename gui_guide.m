@@ -101,7 +101,7 @@ assignin('base', 'exportedData', tableData);
 % Fetch the data from the controls table
 controlsDataTable = findobj('Tag', 'controlsData'); % find table by Tag
 controlsTableData = get(controlsDataTable, 'Data'); % get data from table
-controlsexportedData = array2table(controlsTableData, 'VariableNames',{'initial_phi_theta_rho', 'desired_xyz', 'num_theta', 'num_alpha', 'num_a', 'num_d', 'gravity_mat', 'des_time','complaince_gains', 'impedance_gains'});
+controlsexportedData = array2table(controlsTableData, 'VariableNames',{'initial_euler_angles', 'intial_ef_xyz','desired_xyz', 'num_theta', 'num_alpha', 'num_a', 'num_d', 'gravity_mat', 'des_time','complaince_gains', 'impedance_gains'});
 assignin('base', 'controlsexportedData', controlsexportedData);
 
 % Optionally, display a message to the user
@@ -130,9 +130,11 @@ num_alpha = evalin('base', 'num_alpha');
 num_a = evalin('base', 'num_a');
 num_d = evalin('base', 'num_d');
 desired_xyz = evalin('base', 'desired_xyz');
-initial_phi_theta_rho = evalin('base', 'initial_phi_theta_rho');
+intial_ef_xyz = evalin('base','intial_ef_xyz');
+initial_euler_angles = evalin('base', 'initial_euler_angles');
 compliance_kp = evalin('base', 'compliance_kp');
 compliance_kd = evalin('base', 'compliance_kd');
+compliance_k = evalin('base', 'compliance_k');
 
 
 % GET EQUATIONS 
@@ -145,7 +147,7 @@ my_robot = create_robot(joint_types_list, num_theta, num_alpha, num_a, num_d, I_
 assignin('base','my_robot', my_robot);
 assignin('base','equations', equations);       
 
-[q qdot xe he ctvec] = run_compliance(desired_xyz, initial_phi_theta_rho, des_time, my_robot, compliance_kp, compliance_kd);
+[q qdot xe he ctvec] = run_compliance(desired_xyz, intial_ef_xyz, initial_euler_angles, des_time, my_robot, compliance_kp, compliance_kd,compliance_k);
 assignin('base','xe', xe);       
 assignin('base','he', he);       
 assignin('base','ctvec', ctvec);       
@@ -192,11 +194,12 @@ function controlSelection_SelectionChangedFcn(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 controlSelectedObj = get(handles.controlSelection, 'SelectedObj');
+
 desired_xyz = evalin('base', 'desired_xyz');
 xe = evalin('base', 'xe');
 he = evalin('base', 'he');
-des_time = evalin('base', 'des_time');
 ctvec = evalin('base', 'ctvec');
+
 if controlSelectedObj == handles.compliance_control
     % plot 7
     axesHandle7 = handles.axes7;
@@ -221,8 +224,8 @@ if controlSelectedObj == handles.compliance_control
     cla(axesHandle8, 'reset');
     hold on
     plot(axesHandle8,ctvec ,he(:,1), '-m');
-    plot(axesHandle8,ctvec ,he(:,1), '-b');
-    plot(axesHandle8,ctvec ,he(:,1), '-c');
+    plot(axesHandle8,ctvec ,he(:,2), '-b');
+    plot(axesHandle8,ctvec ,he(:,3), '-c');
     xlabel(axesHandle8, 'Time(s)');
     ylabel(axesHandle8, 'Force (N)');
     title(axesHandle8, 'Compliance Force vs time');
