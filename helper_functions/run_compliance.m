@@ -18,6 +18,7 @@ function [qvec, qdotvec, xevec, he] = run_compliance(desired_position, ...
     qdot=qdot0;
     qdotvec=qdot;
     [tau,jac0] = my_robot.gravjac(q);
+    hevec=zeros(1,6);
     t=0;
     tvec=t;
     dt=0.1;
@@ -25,7 +26,7 @@ function [qvec, qdotvec, xevec, he] = run_compliance(desired_position, ...
     % getting user gains input
     KP=desired_kp*eye(6,6);
     KD=desired_kd*eye(6,6);
-
+    
     while t<desired_time
         [tau,jac0] = my_robot.gravjac(q(end,1:num_joint_variables));
         [JAd,JAdtrans] = JAdesired(Td,Te,t,jac0);
@@ -39,6 +40,7 @@ function [qvec, qdotvec, xevec, he] = run_compliance(desired_position, ...
         tvec=[tvec;ti+t];
         qvec=[qvec;q];
         qdotvec=[qdotvec;qdot];
+        hevec=[hevec;he'];
         t=t+dt;
     end
 end
