@@ -53,7 +53,4 @@ function [position, velocity, acceleration, time] = trapezoidal_trajectory(initi
         end
     end
 
-    % Display as table for easier viewing
-    output_data = table(time', position, velocity, acceleration, 'VariableNames', {'Time', 'Position', 'Velocity', 'Acceleration'});
-    disp(output_data);
 end
