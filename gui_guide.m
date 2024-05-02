@@ -22,7 +22,7 @@ function varargout = gui_guide(varargin)
 
 % Edit the above text to modify the response to help gui_guide
 
-% Last Modified by GUIDE v2.5 29-Apr-2024 17:01:45
+% Last Modified by GUIDE v2.5 01-May-2024 16:48:54
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -101,11 +101,12 @@ assignin('base', 'exportedData', tableData);
 % Fetch the data from the controls table
 controlsDataTable = findobj('Tag', 'controlsData'); % find table by Tag
 controlsTableData = get(controlsDataTable, 'Data'); % get data from table
-controlsexportedData = array2table(controlsTableData, 'VariableNames',{'intial_xyz', 'intial_phi_theta_rho', 'desired_xyz', 'des_phi_theta_rho', 'num_theta', 'num_aplhpa', 'num_a', 'num_d', 'gravity_mat', 'des_time','maxEF_accel'});
+controlsexportedData = array2table(controlsTableData, 'VariableNames',{'initial_euler_angles', 'intial_ef_xyz','desired_xyz', 'num_theta', 'num_alpha', 'num_a', 'num_d', 'gravity_mat', 'des_time','complaince_gains', 'impedance_gains'});
 assignin('base', 'controlsexportedData', controlsexportedData);
 
 % Optionally, display a message to the user
 disp('Data has been exported to the base workspace under the variable name "exportedData".');
+disp('Calculating Equations and Plotting. Please wait');
 
 % VARS 
 var_update(exportedData,controlsexportedData);
@@ -124,19 +125,32 @@ I_links = evalin('base', 'I_links');
 gravity_mat = evalin('base', 'gravity_mat');
 joint_types_list = evalin('base', 'joint_types_list');
 des_time = evalin('base', 'des_time');
+num_theta = evalin('base', 'num_theta');
+num_alpha = evalin('base', 'num_alpha');
+num_a = evalin('base', 'num_a');
+num_d = evalin('base', 'num_d');
+desired_xyz = evalin('base', 'desired_xyz');
+intial_ef_xyz = evalin('base','intial_ef_xyz');
+initial_euler_angles = evalin('base', 'initial_euler_angles');
+compliance_kp = evalin('base', 'compliance_kp');
+compliance_kd = evalin('base', 'compliance_kd');
+compliance_k = evalin('base', 'compliance_k');
 
-% equations 
+
+% GET EQUATIONS 
 equations = equations_of_motion(thetas, alphas, as, ds, joint_types_list, gravity_mat, ...
 I_links, I_motors, link_masses, motor_mass, trans_ratios, friction_coeffs);
 [plotinfo varsplotinfo] = return_plots_equations(equations);
 
-assignin('base','equations', equations);       %incase its too big to show
-%random eqn
-syms x
-a = rand; b = rand; c = rand;
-symbExpr = a*x^2+ c;  % Example quadratic equation
-latexStr = latex(symbExpr);
+my_robot = create_robot(joint_types_list, num_theta, num_alpha, num_a, num_d, I_links, I_motors, link_masses, trans_ratios);
 
+assignin('base','my_robot', my_robot);
+assignin('base','equations', equations);       
+
+[q qdot xe he ctvec] = run_compliance(desired_xyz, intial_ef_xyz, initial_euler_angles, des_time, my_robot, compliance_kp, compliance_kd,compliance_k);
+assignin('base','xe', xe);       
+assignin('base','he', he);       
+assignin('base','ctvec', ctvec);       
 
 % EQN 1
 latexStr1 = latex(equations);
@@ -166,6 +180,9 @@ title(axesHandle1, 'Plot of the Equation of Motion');
 legend(axesHandle1, legendLabels1, 'Location', 'best');
 hold off;  
 
+
+disp('GUI plots and equations have been updated for the specified parameters');
+
 % --- If Enable == 'on', executes on mouse press in 5 pixel border.
 % --- Otherwise, executes on mouse press in 5 pixel border or over compliance_control.
 
@@ -178,26 +195,42 @@ function controlSelection_SelectionChangedFcn(hObject, eventdata, handles)
 
 controlSelectedObj = get(handles.controlSelection, 'SelectedObj');
 
+desired_xyz = evalin('base', 'desired_xyz');
+xe = evalin('base', 'xe');
+he = evalin('base', 'he');
+ctvec = evalin('base', 'ctvec');
+
 if controlSelectedObj == handles.compliance_control
     % plot 7
     axesHandle7 = handles.axes7;
     axes(axesHandle7);
     cla(axesHandle7, 'reset'); 
-    plot(axesHandle7, rand(10,1), rand(10,1), 'b', rand(10,1), rand(10,1), 'r--'); % Blue solid and red dashed lines
-    xlabel(axesHandle7, 'x axis');
-    ylabel(axesHandle7, 'y axis');
-    title(axesHandle7, 'Compliance Plot 1');
-    legend(axesHandle7,'desired', 'actual')
-    
+    hold on;
+    yline(axesHandle7,desired_xyz(1), 'm--')
+    yline(axesHandle7,desired_xyz(2),'b--')
+    yline(axesHandle7,desired_xyz(3),'c--')
+    plot(axesHandle7,ctvec ,xe(:,1), '-m');
+    plot(axesHandle7,ctvec , xe(:,2), '-b');
+    plot(axesHandle7,ctvec , xe(:,3), '-c');
+    xlabel(axesHandle7, 'Time (s)');
+    ylabel(axesHandle7, 'Pos');
+    title(axesHandle7, 'Compliance Control Desired vs Actual Position vs TIme');
+    legend(axesHandle7,'Desired x','Desired y','Desired z','Actual x','Actual y','Actual z', 'Location', 'best')
+    hold off
+
     % plot 8
     axesHandle8 = handles.axes8;
     axes(axesHandle8);
-    cla(axesHandle8, 'reset'); 
-    plot(axesHandle8, rand(10,1), rand(10,1));
-    xlabel(axesHandle8, 'x axis');
-    ylabel(axesHandle8, 'y axis');
-    title(axesHandle8, 'Compliance Plot 2');
-
+    cla(axesHandle8, 'reset');
+    hold on
+    plot(axesHandle8,ctvec ,he(:,1), '-m');
+    plot(axesHandle8,ctvec ,he(:,2), '-b');
+    plot(axesHandle8,ctvec ,he(:,3), '-c');
+    xlabel(axesHandle8, 'Time(s)');
+    ylabel(axesHandle8, 'Force (N)');
+    title(axesHandle8, 'Compliance Force vs time');
+    legend(axesHandle8,'Force x','Force y','Force z', 'Location', 'best')
+    hold off
 
 elseif controlSelectedObj == handles.impedence_control
     % plot 7

@@ -2,8 +2,6 @@ function var_update(exportedData,controlsexportedData)
 
         % this function is designed to extract values from thje gui and
         % format them
-        %this funtion also runs the helper functions to calculate the
-        %equations
 
         % for dynamics enter as var.. for controls as numbers 
 variableNames = {'thetas', 'alphas', 'as', 'ds', 'joint_types', 'link_masses', 'motor_mass', 'I_motors', 'I_links', 'trans_ratios', 'friction_coeffs'};
@@ -30,21 +28,40 @@ for k = 1:length(variableNames)
 end
 
 % CONTROL TABLE
-contVariableNames = {'initial_xyz', 'initial_phi_theta_rho', 'desired_xyz', 'des_phi_theta_rho', 'num_theta', 'num_alpha', 'num_a', 'num_d', 'gravity_mat', 'des_time', 'maxEF_accel'};
+contVariableNames = { 'initial_euler_angles', 'intial_ef_xyz','desired_xyz', 'num_theta', 'num_alpha', 'num_a', 'num_d', 'gravity_mat', 'des_time','compliance_gains', 'impedance_gains'};
 for k = 1:length(contVariableNames)
     controlscurrentData = str2num(cell2mat(controlsexportedData{1, k}));
   controlscurrentData = controlscurrentData';
-    % Handle cases where the entire column is empty or non-applicable data
     if isempty(controlscurrentData)
         controlscurrentData = NaN; 
     end
-%     controlscurrentData = str2double(controlscurrentData);
     assignin('base', contVariableNames{k}, controlscurrentData');
 end
 
+% extract and label gains for compliance and impedance
+compliance_gains = evalin('base', 'compliance_gains');
+impedance_gains = evalin('base', 'impedance_gains');
+if exist('compliance_gains', 'var')==1
+    compliance_kp = compliance_gains(1,:);
+    compliance_kd = compliance_gains(2,:);
+    compliance_k = compliance_gains(3,:);
+    assignin('base', 'compliance_kd', compliance_kd);
+    assignin('base', 'compliance_kp', compliance_kp);
+    assignin('base', 'compliance_k', compliance_k);
+end
+if (exist('impedance_gains', 'var') == 1 && ~isnan(impedance_gains))
+    impedance_kp = impedance_gains(1,:);
+    impedance_kd = impedance_gains(2,:);
+    impedance_md = impedance_gains(3,:);
+    impedance_k = impedance_gains(4,:);
+    assignin('base', 'impedance_kp', impedance_kp);
+    assignin('base', 'impedance_kd', impedance_kd);
+    assignin('base', 'impedance_md', impedance_md);
+    assignin('base', 'impedance_k', impedance_k);
+end
+
+% to turn joint types to list
 joint_types = evalin('base', 'joint_types');
-
-
 if exist('joint_types', 'var') == 1  
     max_length = max(cellfun(@length, joint_types));
     joint_types_list = char(cellfun(@(x) [x repmat(' ', 1, max_length - length(x))], joint_types, 'UniformOutput', false));
@@ -61,29 +78,6 @@ for k = 1:length(fixvars)
     assignin('base', fixvars{k}, converted_value);
 end
 
-
-% link_masses = evalin('base', 'link_masses');
-% motor_mass = evalin('base', 'motor_mass');
-% I_motors = evalin('base', 'I_motors');
-% trans_ratios = evalin('base', 'trans_ratios');
-% friction_coeffs = evalin('base', 'friction_coeffs');
-% I_links = evalin('base', 'I_links');
-% 
-% 
-% 
-% link_masses = str2double(link_masses);
-% motor_mass = str2double(motor_mass);
-% I_motors = str2double(I_motors);
-% I_links = str2double(I_links);
-% trans_ratios = str2double(trans_ratios);
-% friction_coeffs = str2double(friction_coeffs);
-% 
-% assignin('base', 'link_masses', link_masses);
-% assignin('base', 'motor_mass', motor_mass);
-% assignin('base', 'I_motors', I_motors);
-% assignin('base', 'I_links', I_links);
-% assignin('base', 'trans_ratios', trans_ratios);
-% assignin('base', 'friction_coeffs', friction_coeffs);
 
 end
 
