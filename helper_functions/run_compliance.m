@@ -1,5 +1,5 @@
 %% Compliance control function
-function [qvec, qdotvec, xevec, he, tvec] = run_compliance(desired_position, ...
+function [qvec, qdotvec, xevec, hevec, tvec] = run_compliance(desired_position, ...
     initial_joint_variables, desired_time, my_robot, desired_kp, desired_kd)
     % This function computes the q, q_dot, and end effector position using
     % compliance control for specified robot.
