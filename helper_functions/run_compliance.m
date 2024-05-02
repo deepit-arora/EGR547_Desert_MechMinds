@@ -39,7 +39,7 @@ function [qvec, qdotvec, xevec, hevec, tvec] = run_compliance(desired_position, 
 % user inputs for K
     K=diag([desired_k(1) desired_k(2) desired_k(3)]);
     KP=diag([desired_kp(1) desired_kp(2) desired_kp(3)]);
-    KD=desired_kd*eye(3,3);
+    KD=diag([desired_kd(1) desired_kd(2) desired_kd(3)]);
 
     while t<desired_time
         [tau,jac0] = my_robot.gravjac(q(end,1:num_joint_variables));
