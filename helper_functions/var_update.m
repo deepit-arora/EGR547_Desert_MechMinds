@@ -28,7 +28,7 @@ for k = 1:length(variableNames)
 end
 
 % CONTROL TABLE
-contVariableNames = { 'initial_euler_angles', 'intial_ef_xyz','desired_xyz', 'num_theta', 'num_alpha', 'num_a', 'num_d', 'gravity_mat', 'des_time','compliance_gains', 'impedance_gains','desired_pos_coeff','desired_vel_coeff', 'desired_acc_coeff'};
+contVariableNames = { 'initial_euler_angles', 'intial_ef_xyz','desired_xyz', 'num_theta', 'num_alpha', 'num_a', 'num_d', 'gravity_mat', 'des_time','compliance_gains', 'impedance_gains','desired_pos_coeff'};
 for k = 1:length(contVariableNames)
     controlscurrentData = str2num(cell2mat(controlsexportedData{1, k}));
   controlscurrentData = controlscurrentData';

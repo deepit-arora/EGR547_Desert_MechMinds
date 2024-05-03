@@ -101,7 +101,7 @@ assignin('base', 'exportedData', tableData);
 % Fetch the data from the controls table
 controlsDataTable = findobj('Tag', 'controlsData'); % find table by Tag
 controlsTableData = get(controlsDataTable, 'Data'); % get data from table
-controlsexportedData = array2table(controlsTableData, 'VariableNames',{'initial_euler_angles', 'intial_ef_xyz','desired_xyz', 'num_theta', 'num_alpha', 'num_a', 'num_d', 'gravity_mat', 'des_time','complaince_gains', 'impedance_gains','desired_pos_coeff','desired_vel_coeff', 'desired_acc_coeff'});
+controlsexportedData = array2table(controlsTableData, 'VariableNames',{'initial_euler_angles', 'intial_ef_xyz','desired_xyz', 'num_theta', 'num_alpha', 'num_a', 'num_d', 'gravity_mat', 'des_time','complaince_gains', 'impedance_gains','desired_pos_coeff'});
 assignin('base', 'controlsexportedData', controlsexportedData);
 
 % Optionally, display a message to the user
