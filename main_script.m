@@ -9,9 +9,3 @@ run("startup_rvc.m")
 hGui = gui_guide;
 handles = guidata(hGui);
 guidata(hGui, handles);
-
-% assumed variables
-compliance_gains =[100 25 10 ;75 75 75; 50 10 1];
-impedance_gains =[100 25 10 ;75 75 75; 50 10 1; 10 10 10; 20 20 20];
-gravity_mat =[0 0 -9.81];
-des_time =100;
