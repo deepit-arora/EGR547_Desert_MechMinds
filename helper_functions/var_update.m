@@ -28,7 +28,7 @@ for k = 1:length(variableNames)
 end
 
 % CONTROL TABLE
-contVariableNames = { 'initial_euler_angles', 'intial_ef_xyz','desired_xyz', 'num_theta', 'num_alpha', 'num_a', 'num_d', 'gravity_mat', 'des_time','compliance_gains', 'impedance_gains'};
+contVariableNames = { 'initial_euler_angles', 'intial_ef_xyz','desired_xyz', 'num_theta', 'num_alpha', 'num_a', 'num_d', 'gravity_mat', 'des_time','compliance_gains', 'impedance_gains','desired_pos_coeff'};
 for k = 1:length(contVariableNames)
     controlscurrentData = str2num(cell2mat(controlsexportedData{1, k}));
   controlscurrentData = controlscurrentData';
@@ -41,7 +41,7 @@ end
 % extract and label gains for compliance and impedance
 compliance_gains = evalin('base', 'compliance_gains');
 impedance_gains = evalin('base', 'impedance_gains');
-if exist('compliance_gains', 'var')==1
+if exist('compliance_gains', 'var')==1 && all(~isnan(compliance_gains   ), 'all')
     compliance_kp = compliance_gains(1,:);
     compliance_kd = compliance_gains(2,:);
     compliance_k = compliance_gains(3,:);
@@ -49,15 +49,21 @@ if exist('compliance_gains', 'var')==1
     assignin('base', 'compliance_kp', compliance_kp);
     assignin('base', 'compliance_k', compliance_k);
 end
-if (exist('impedance_gains', 'var') == 1 && ~isnan(impedance_gains))
+if exist('impedance_gains', 'var') == 1 && all(~isnan(impedance_gains), 'all')
     impedance_kp = impedance_gains(1,:);
-    impedance_kd = impedance_gains(2,:);
-    impedance_md = impedance_gains(3,:);
-    impedance_k = impedance_gains(4,:);
+    impedance_ke = impedance_gains(2,:);
+    impedance_kd = impedance_gains(3,:);
+    impedance_kde = impedance_gains(4,:);
+    impedance_md = impedance_gains(5,:);
+    impedance_mde = impedance_gains(6,:);
+
     assignin('base', 'impedance_kp', impedance_kp);
+    assignin('base', 'impedance_ke', impedance_ke);
     assignin('base', 'impedance_kd', impedance_kd);
+    assignin('base', 'impedance_kde', impedance_kde);
     assignin('base', 'impedance_md', impedance_md);
-    assignin('base', 'impedance_k', impedance_k);
+    assignin('base', 'impedance_mde', impedance_mde);
+
 end
 
 % to turn joint types to list
