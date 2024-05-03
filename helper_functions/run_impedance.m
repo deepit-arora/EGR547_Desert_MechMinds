@@ -1,5 +1,5 @@
 function [qvec, qdotvec, xevec, hevec, tvec] = run_impedance(initial_end_effector_position, ...
-    initial_euler_angles, desired_time, my_robot, desired_kp, ...
+    initial_euler_angles, desired_time, my_robot, desired_kp, desired_ke, ...
     desired_kd, desired_kde, desired_md, desired_mde, ...
     desired_pos_coeff)
     global jac0 tau;
@@ -33,7 +33,7 @@ function [qvec, qdotvec, xevec, hevec, tvec] = run_impedance(initial_end_effecto
 
     % user inputs for K
     KP=diag([desired_kp(1) desired_kp(2) desired_kp(3)]);
-    Ke=diag([1 1 1]);
+    Ke=diag([desired_ke(1) desired_ke(2) desired_ke(3)]);
     KD=diag([desired_kd(1) desired_kd(2) desired_kd(3)]);
     KDe=diag([desired_kde(1) desired_kde(2) desired_kde(3)]);
     Md=diag([desired_md(1), desired_md(2), desired_md(3)]);

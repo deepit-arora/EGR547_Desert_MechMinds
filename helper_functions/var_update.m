@@ -51,12 +51,14 @@ if exist('compliance_gains', 'var')==1 && all(~isnan(compliance_gains   ), 'all'
 end
 if exist('impedance_gains', 'var') == 1 && all(~isnan(impedance_gains), 'all')
     impedance_kp = impedance_gains(1,:);
-    impedance_kd = impedance_gains(2,:);
-    impedance_kde = impedance_gains(3,:);
-    impedance_md = impedance_gains(4,:);
-    impedance_mde = impedance_gains(5,:);
+    impedance_ke = impedance_gains(2,:);
+    impedance_kd = impedance_gains(3,:);
+    impedance_kde = impedance_gains(4,:);
+    impedance_md = impedance_gains(5,:);
+    impedance_mde = impedance_gains(6,:);
 
     assignin('base', 'impedance_kp', impedance_kp);
+    assignin('base', 'impedance_ke', impedance_ke);
     assignin('base', 'impedance_kd', impedance_kd);
     assignin('base', 'impedance_kde', impedance_kde);
     assignin('base', 'impedance_md', impedance_md);

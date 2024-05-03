@@ -136,9 +136,12 @@ compliance_kp = evalin('base', 'compliance_kp');
 compliance_kd = evalin('base', 'compliance_kd');
 compliance_k = evalin('base', 'compliance_k');
 desired_pos_coeff = evalin('base', 'desired_pos_coeff');
-desired_vel_coeff = evalin('base', 'desired_vel_coeff');
-desired_acc_coeff = evalin('base', 'desired_acc_coeff');
-
+impedance_kp = evalin('base', 'impedance_kp');
+impedance_ke = evalin('base', 'impedance_ke');
+impedance_kd = evalin('base', 'impedance_kd');
+impedance_kde = evalin('base', 'impedance_kde');
+impedance_md = evalin('base', 'impedance_md');
+impedance_mde = evalin('base', 'impedance_mde');
 
 % GET EQUATIONS 
 equations = equations_of_motion(thetas, alphas, as, ds, joint_types_list, gravity_mat, ...
@@ -156,7 +159,18 @@ assignin('base','he', he);
 assignin('base','ctvec', ctvec);       
 
 
-[imp_pos imp_vel imp_time] = trapezoidal_trajectory(intial_ef_xyz, desired_xyz, des_time);
+[qvec, qdotvec, xevec, hevec, tvec] = run_impedance(intial_ef_xyz, ...
+    initial_euler_angles, des_time, my_robot, impedance_kp, impedance_ke, ...
+    impedance_kd, impedance_kde, impedance_md, impedance_mde, ...
+    desired_pos_coeff);
+assignin('base','xevec', xevec);       
+assignin('base','hevec', hevec);       
+assignin('base','tvec', tvec); 
+
+syms x
+xd_sym = poly2sym(desired_pos_coeff, x);
+xd_values = double(subs(xd_sym, tvec));
+assignin('base','xd_values', xd_values); 
 
 % EQN 1
 latexStr1 = latex(equations);
@@ -204,7 +218,11 @@ controlSelectedObj = get(handles.controlSelection, 'SelectedObj');
 desired_xyz = evalin('base', 'desired_xyz');
 xe = evalin('base', 'xe');
 he = evalin('base', 'he');
+xevec = evalin('base', 'xevec');
+hevec = evalin('base', 'hevec');
+tvec = evalin('base', 'tvec');
 ctvec = evalin('base', 'ctvec');
+xd_values = evalin('base', 'xd_values');
 
 if controlSelectedObj == handles.compliance_control
     % plot 7
@@ -245,16 +263,14 @@ elseif controlSelectedObj == handles.impedence_control
     axes(axesHandle7);
     cla(axesHandle7, 'reset'); 
     hold on;
-    yline(axesHandle7,desired_xyz(1), 'm--')
-    yline(axesHandle7,desired_xyz(2),'b--')
-    yline(axesHandle7,desired_xyz(3),'c--')
-    plot(axesHandle7,ctvec ,xe(:,1), '-m');
-    plot(axesHandle7,ctvec , xe(:,2), '-b');
-    plot(axesHandle7,ctvec , xe(:,3), '-c');
+    plot(axesHandle7,tvec, xd_values, 'r--')
+    plot(axesHandle7,tvec ,xevec(:,1), '-m');
+    plot(axesHandle7,tvec , xevec(:,2), '-b');
+    plot(axesHandle7,tvec , xevec(:,3), '-c');
     xlabel(axesHandle7, 'Time (s)');
     ylabel(axesHandle7, 'Pos');
     title(axesHandle7, 'Impedance Control Desired vs Actual Position vs TIme');
-    legend(axesHandle7,'Desired x','Desired y','Desired z','Actual x','Actual y','Actual z', 'Location', 'best')
+    legend(axesHandle7, 'Desired Position', 'Actual x','Actual y','Actual z', 'Location', 'best')
     hold off
 
     % plot 8
@@ -262,9 +278,9 @@ elseif controlSelectedObj == handles.impedence_control
     axes(axesHandle8);
     cla(axesHandle8, 'reset');
     hold on
-    plot(axesHandle8,ctvec ,he(:,1), '-m');
-    plot(axesHandle8,ctvec ,he(:,2), '-b');
-    plot(axesHandle8,ctvec ,he(:,3), '-c');
+    plot(axesHandle8,tvec ,hevec(:,1), '-m');
+    plot(axesHandle8,tvec ,hevec(:,2), '-b');
+    plot(axesHandle8,tvec ,hevec(:,3), '-c');
     xlabel(axesHandle8, 'Time(s)');
     ylabel(axesHandle8, 'Force (N)');
     title(axesHandle8, 'Impedance Force vs time');
