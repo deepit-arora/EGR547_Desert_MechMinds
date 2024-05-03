@@ -101,7 +101,7 @@ assignin('base', 'exportedData', tableData);
 % Fetch the data from the controls table
 controlsDataTable = findobj('Tag', 'controlsData'); % find table by Tag
 controlsTableData = get(controlsDataTable, 'Data'); % get data from table
-controlsexportedData = array2table(controlsTableData, 'VariableNames',{'initial_euler_angles', 'intial_ef_xyz','desired_xyz', 'num_theta', 'num_alpha', 'num_a', 'num_d', 'gravity_mat', 'des_time','complaince_gains', 'impedance_gains'});
+controlsexportedData = array2table(controlsTableData, 'VariableNames',{'initial_euler_angles', 'intial_ef_xyz','desired_xyz', 'num_theta', 'num_alpha', 'num_a', 'num_d', 'gravity_mat', 'des_time','complaince_gains', 'impedance_gains','desired_pos_coeff','desired_vel_coeff', 'desired_acc_coeff'});
 assignin('base', 'controlsexportedData', controlsexportedData);
 
 % Optionally, display a message to the user
@@ -135,6 +135,9 @@ initial_euler_angles = evalin('base', 'initial_euler_angles');
 compliance_kp = evalin('base', 'compliance_kp');
 compliance_kd = evalin('base', 'compliance_kd');
 compliance_k = evalin('base', 'compliance_k');
+desired_pos_coeff = evalin('base', 'desired_pos_coeff');
+desired_vel_coeff = evalin('base', 'desired_vel_coeff');
+desired_acc_coeff = evalin('base', 'desired_acc_coeff');
 
 
 % GET EQUATIONS 
@@ -151,6 +154,9 @@ assignin('base','equations', equations);
 assignin('base','xe', xe);       
 assignin('base','he', he);       
 assignin('base','ctvec', ctvec);       
+
+
+[imp_pos imp_vel imp_time] = trapezoidal_trajectory(intial_ef_xyz, desired_xyz, des_time);
 
 % EQN 1
 latexStr1 = latex(equations);
@@ -232,24 +238,37 @@ if controlSelectedObj == handles.compliance_control
     legend(axesHandle8,'Force x','Force y','Force z', 'Location', 'best')
     hold off
 
+
 elseif controlSelectedObj == handles.impedence_control
     % plot 7
     axesHandle7 = handles.axes7;
     axes(axesHandle7);
     cla(axesHandle7, 'reset'); 
-    plot(axesHandle7, rand(10,1), rand(10,1), 'b', rand(10,1), rand(10,1), 'r--'); % Blue solid and red dashed lines
-    xlabel(axesHandle7, 'x axis');
-    ylabel(axesHandle7, 'y axis');
-    title(axesHandle7, 'Impedance Plot 1');
-    legend(axesHandle7,'desired', 'actual')
-    
+    hold on;
+    yline(axesHandle7,desired_xyz(1), 'm--')
+    yline(axesHandle7,desired_xyz(2),'b--')
+    yline(axesHandle7,desired_xyz(3),'c--')
+    plot(axesHandle7,ctvec ,xe(:,1), '-m');
+    plot(axesHandle7,ctvec , xe(:,2), '-b');
+    plot(axesHandle7,ctvec , xe(:,3), '-c');
+    xlabel(axesHandle7, 'Time (s)');
+    ylabel(axesHandle7, 'Pos');
+    title(axesHandle7, 'Impedance Control Desired vs Actual Position vs TIme');
+    legend(axesHandle7,'Desired x','Desired y','Desired z','Actual x','Actual y','Actual z', 'Location', 'best')
+    hold off
+
     % plot 8
     axesHandle8 = handles.axes8;
     axes(axesHandle8);
-    cla(axesHandle8, 'reset'); 
-    plot(axesHandle8, rand(10,1), rand(10,1));
-    xlabel(axesHandle8, 'x axis');
-    ylabel(axesHandle8, 'y axis');
-    title(axesHandle8, 'Impedance Plot 2');
+    cla(axesHandle8, 'reset');
+    hold on
+    plot(axesHandle8,ctvec ,he(:,1), '-m');
+    plot(axesHandle8,ctvec ,he(:,2), '-b');
+    plot(axesHandle8,ctvec ,he(:,3), '-c');
+    xlabel(axesHandle8, 'Time(s)');
+    ylabel(axesHandle8, 'Force (N)');
+    title(axesHandle8, 'Impedance Force vs time');
+    legend(axesHandle8,'Force x','Force y','Force z', 'Location', 'best')
+    hold off
    
 end
